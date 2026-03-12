@@ -10,21 +10,19 @@
             <span class="material-symbols-outlined">corporate_fare</span>
         </div>
         <div>
-            <h1 class="text-primary font-bold text-lg leading-tight">FluxRh</h1>
-            <p class="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-semibold">Gestion des
-                Effectifs</p>
+            <h1 class="text-primary font-bold text-lg leading-tight">SENASEM</h1>
         </div>
     </div>
 
     <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-        {{-- Lien Dashboard --}}
+
         <a href="{{ route('dashboard') }}"
             class="flex items-center gap-3 px-3 py-2.5 {{ request()->routeIs('dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }} rounded-lg transition-colors">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="text-sm">Tableau de bord</span>
         </a>
 
-        {{-- Lien Agents (Actif si on est sur la page agents) --}}
+
         <a href="#"
             class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
             <span class="material-symbols-outlined">group</span>
