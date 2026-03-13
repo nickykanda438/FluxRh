@@ -15,26 +15,27 @@
     </div>
 
     <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-
         <a href="{{ route('dashboard') }}"
             class="flex items-center gap-3 px-3 py-2.5 {{ request()->routeIs('dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }} rounded-lg transition-colors">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="text-sm">Tableau de bord</span>
         </a>
-
-
-        <a href="#"
-            class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+        <a href="{{ route('agents.index') }}"
+            class="flex items-center gap-3 px-3 py-2.5 {{ request()->routeIs('agents.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }} rounded-lg transition-colors">
             <span class="material-symbols-outlined">group</span>
             <span class="text-sm font-medium">Gestion des Agents</span>
         </a>
 
-        <a href="#"
-            class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+        <a href="{{ route('stagiaires.index') }}"
+            class="flex items-center gap-3 px-3 py-2.5 {{ request()->routeIs('stagiaires.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }} rounded-lg transition-colors">
             <span class="material-symbols-outlined">school</span>
             <span class="text-sm font-medium">Stagiaires</span>
         </a>
-
+        <a class="flex items-center gap-3 px-3 py-2.5 {{ request()->routeIs('users.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }} rounded-lg transition-colors"
+            href="#">
+            <span class="material-symbols-outlined text-xl">person_add</span>
+            <span class="text-sm font-semibold">User Management</span>
+        </a>
     </nav>
 
     <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
