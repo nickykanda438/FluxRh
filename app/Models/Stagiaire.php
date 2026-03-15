@@ -10,9 +10,6 @@ class Stagiaire extends Model
 {
     use HasFactory;
 
-    /**
-     * Autoriser l'insertion de masse.
-     */
     protected $guarded = [];
 
     /**
