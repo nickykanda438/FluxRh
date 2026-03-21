@@ -3,4 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StagiaireController;
 
-Route::resource('stagiaires',StagiaireController::class);
+Route::middleware('auth')->group(function () {
+    Route::resource('stagiaires', StagiaireController::class);
+});
