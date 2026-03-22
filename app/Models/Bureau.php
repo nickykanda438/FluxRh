@@ -8,6 +8,7 @@ class Bureau extends Model
 {
     protected $fillable = [
         'nom', 
+        'division_id'
     ];
 
     public function agents()
