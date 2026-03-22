@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Bureau extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'nom', 
         'division_id'
@@ -19,7 +21,7 @@ class Bureau extends Model
     {
         return $this->hasMany(Stagiaire::class);
     }
-    public function divisions()
+    public function division()
     {
         return $this->belongsTo(Division::class);
     }

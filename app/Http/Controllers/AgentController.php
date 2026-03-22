@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Agent;
+use App\Models\Division;
 use App\Models\Bureau;
 use App\Models\Departement;
 use App\Models\Document;
@@ -16,10 +17,19 @@ class AgentController extends Controller
      */
     public function index()
     {
-        $agents = Agent::all();
+        $agents = Agent::with(['bureau.division'])->latest()->paginate(10);
+
+        $stats = [
+            'countActifs' => Agent::where('status', 'Actif')->count(),
+            'countDeserteurs' => Agent::where('status', 'Déserteur')->count(),
+            'countRetraite' => Agent::where('date_naissance', '<=', now()->subYears(55))->count(),
+            'countDecedes' => Agent::where('status', 'Décédé')->count(),
+        ];
+
         $departments = Departement::all();
         $bureaus = Bureau::all();
-        return view('agents.index', compact('agents', 'departments', 'bureaus'));
+
+        return view('agents.index', compact('agents', 'stats', 'departments', 'bureaus'));
     }
 
     /**
