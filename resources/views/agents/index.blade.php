@@ -50,7 +50,7 @@
                             class="text-[10px] font-black text-green-600 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-md uppercase">En
                             poste</span>
                     </div>
-                    <h4 class="text-3xl font-black tracking-tighter">1,248</h4>
+                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countActifs'] }}</h4>
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Agents Actifs</p>
                 </div>
 
@@ -64,8 +64,8 @@
                         <span
                             class="text-[10px] font-black text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded-md uppercase">Alerte</span>
                     </div>
-                    <h4 class="text-3xl font-black tracking-tighter">14</h4>
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Déserteurs</p>
+                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countDeserteurs'] }}</h4>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Desertersw</p>
                 </div>
 
                 <div
@@ -78,7 +78,7 @@
                         <span
                             class="text-[10px] font-black text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-md uppercase">Retraite</span>
                     </div>
-                    <h4 class="text-3xl font-black tracking-tighter">89</h4>
+                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countRetraite'] }}</h4>
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Agents Âgés</p>
                 </div>
 
@@ -92,7 +92,7 @@
                         <span
                             class="text-[10px] font-black text-red-600 bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded-md uppercase">Inactif</span>
                     </div>
-                    <h4 class="text-3xl font-black tracking-tighter">06</h4>
+                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countDecedes'] }}</h4>
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Décédés</p>
                 </div>
             </div>
