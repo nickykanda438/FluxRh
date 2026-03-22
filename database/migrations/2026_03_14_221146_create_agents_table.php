@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('telephone');
             $table->string('email')->unique();
             $table->integer('nbre_enfant')->default(0);
-            $table->foreignId('bureau_id')->constrained('cascade'); 
+            $table->foreignId('bureau_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['actif', 'deserteur', 'decede', 'retraite'])->default('actif');
             $table->timestamps();
             $table->softDeletes(); 

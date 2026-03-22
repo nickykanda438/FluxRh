@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Agent;
+use App\Models\Bureau;
+use App\Models\Departement;
+use App\Models\Document;
+use Illuminate\Support\Facades\DB;
 
 class AgentController extends Controller
 {
@@ -12,8 +16,10 @@ class AgentController extends Controller
      */
     public function index()
     {
-        // $agents = Agent::all();
-        return view('agents.index');
+        $agents = Agent::all();
+        $departments = Departement::all();
+        $bureaus = Bureau::all();
+        return view('agents.index', compact('agents', 'departments', 'bureaus'));
     }
 
     /**
@@ -29,15 +35,86 @@ class AgentController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'matricule'       => 'required|unique:agents,matricule',
+            'nom'             => 'required|string|max:255',
+            'postnom'         => 'required|string|max:255',
+            'prenom'          => 'required|string|max:255',
+            'bureau_id'       => 'required|exists:bureaus,id',
+            'doc_diplome'     => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'doc_biometrie'   => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'doc_affectation' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'ref_diplome'     => 'nullable|string',
+            'date_diplome'    => 'nullable|date',
+        ]);
 
+        return DB::transaction(function () use ($request) {
+            
+            $agentData = $request->except([
+                'doc_diplome', 
+                'ref_diplome', 
+                'date_diplome', 
+                'type_diplome',
+                'doc_biometrie', 
+                'ref_biometrie', 
+                'date_biometrie', 
+                'type_biometrie',
+                'doc_affectation', 
+                'ref_affectation', 
+                'date_affectation', 
+                'type_affectation',
+                '_token'
+            ]);
+
+            $agent = Agent::create($agentData);
+
+            $documentConfigs = [
+                'diplome'     => 'Diplôme',
+                'biometrie'   => 'Carte Biométrique',
+                'affectation' => "Acte d'affectation"
+            ];
+
+            foreach ($documentConfigs as $prefix => $typeLabel) {
+                $fileKey = "doc_" . $prefix;
+                
+                if ($request->hasFile($fileKey)) {
+                    $file = $request->file($fileKey);
+                    
+                    $fileName = $agent->matricule . '_' . $prefix . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('documents/agents', $fileName, 'public');
+
+                    $agent->documents()->create([
+                        'type'           => $request->input("type_" . $prefix) ?? $typeLabel,
+                        'reference'      => $request->input("ref_" . $prefix),
+                        'file_path'      => $path,
+                        'date_obtention' => $request->input("date_" . $prefix),
+                        'stagiaire_id'   => null,
+                    ]);
+                }
+            }
+
+            return redirect()->route('agents.index')->with('success', 'L\'agent ' . $agent->nom . ' a été enregistré avec succès.');
+        });
+    }
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:Actif,Déserteur,Âgé,Décédé'
+            ]);
+        $agent = Agent::findOrFail($id);
+        $agent->update([
+            'status' => $request->status
+            ]);
+        return back()->with('success', 'Le statut de l\'agent a été mis à jour.');
+    }
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $agent = Agent::findOrFail($id);
+        $document = Document::where('agent_id', $agent->id)->first();
+        return view('agents.show', compact('agent', 'document'));
     }
 
     /**
@@ -61,6 +138,8 @@ class AgentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $agent = Agent::findOrFail($id);
+        $agent->delete();
+        return redirect()->route('agents.index')->with('success', 'L\'agent a été supprimé avec succès.');
     }
 }
