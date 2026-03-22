@@ -27,6 +27,10 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+    public function index(Request $request){
+        $users = User::all();
+        return view('users.index', compact('users'));
+    }
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -35,9 +39,12 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $isAdmin = User::count() === 0;
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'is_admin' => $isAdmin,
             'password' => Hash::make($request->password),
         ]);
 
