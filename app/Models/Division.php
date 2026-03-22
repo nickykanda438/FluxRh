@@ -18,4 +18,8 @@ class Division extends Model
     {
         return $this->hasMany(Bureau::class);
     }
+    public function agents()
+    {
+        return $this->hasManyThrough(Agent::class, Bureau::class);
+    }
 }
