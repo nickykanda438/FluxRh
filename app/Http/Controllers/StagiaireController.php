@@ -12,9 +12,17 @@ class StagiaireController extends Controller
      */
     public function index()
     {
-        // On récupère tous les stagiaires (on peut ajouter du tri ici)
-        $stagiaires = Stagiaire::latest()->get();
-        return view('stagiaires.index', compact('stagiaires'));
+        $stagiaires = Stagiaire::all();
+
+        // Calcul des stats
+        $stats = [
+            'total' => $stagiaires->count(),
+            'academique' => $stagiaires->where('type_stagiaire', 'académique')->count(),
+            'professionnel' => $stagiaires->where('type_stagiaire', 'professionnel')->count(),
+            'en_cours' => $stagiaires->where('statut', 'encours')->count(),
+        ];
+
+        return view('stagiaires.index', compact('stagiaires', 'stats'));
     }
 
     /**
@@ -54,9 +62,6 @@ class StagiaireController extends Controller
         return view('stagiaires.edit', compact('stagiaire'));
     }
 
-    /**
-     * Met à jour les informations d'un stagiaire.
-     */
     public function update(Request $request, Stagiaire $stagiaire)
     {
         $validated = $request->validate([
@@ -77,9 +82,6 @@ class StagiaireController extends Controller
                          ->with('success', 'Les informations du stagiaire ont été mises à jour.');
     }
 
-    /**
-     * Supprime un stagiaire.
-     */
     public function destroy(Stagiaire $stagiaire)
     {
         $stagiaire->delete();
