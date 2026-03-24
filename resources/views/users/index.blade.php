@@ -55,7 +55,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3">Éditer</a>
-                                <button class="text-red-600 hover:text-red-900">Supprimer</button>
+                                <a data-modal-target="popup-modal" data-modal-toggle="popup-modal"
+                                    onclick="supprimer(event)" data-url="{{ route('users.destroy', $user->id) }}"
+                                    class="text-red-600 hover:text-red-900">Supprimer</a>
                             </td>
                         </tr>
                     @endforeach
@@ -63,4 +65,5 @@
             </table>
         </div>
     </div>
+    <x-confirm />
 </x-app-layout>
