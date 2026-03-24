@@ -33,9 +33,11 @@
                 ['route' => 'dashboard', 'icon' => 'dashboard', 'label' => 'Tableau de bord'],
                 ['route' => 'agents.index', 'icon' => 'group', 'label' => 'Gestion des Agents'],
                 ['route' => 'stagiaires.index', 'icon' => 'school', 'label' => 'Stagiaires'],
-                ['route' => 'users.index', 'icon' => 'person', 'label' => 'Utilisateurs'],
             ];
-            '';
+
+            if (auth()->user()->is_admin == 1) {
+                $navItems[] = ['route' => 'users.index', 'icon' => 'person', 'label' => 'Utilisateurs'];
+            }
         @endphp
 
         @foreach ($navItems as $item)
@@ -48,7 +50,6 @@
                 <span x-show="!isCollapsed" x-transition.opacity class="text-sm truncate">{{ $item['label'] }}</span>
             </a>
         @endforeach
-
     </nav>
 
     <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
