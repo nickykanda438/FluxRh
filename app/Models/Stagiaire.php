@@ -9,23 +9,27 @@ class Stagiaire extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'nom', 
-        'prenom', 
-        'postnom', 
-        'genre', 
-        'telephone', 
-        'email',
-        'type_stagiaire', 
-        'institution_provenance', 
-        'domaine_etude',
-        'date_debut', 
-        'date_fin', 
-        'statut', 
-        'agent_id', 
-        'service_affectation', 
-        'observation_finale'
-    ];
+   protected $fillable = [
+    'nom', 
+    'prenom', 
+    'postnom', 
+    'genre', 
+    'telephone', 
+    'email',
+    'type_stagiaire', 
+    'institution_provenance', 
+    'domaine_etude_ou_competence', // Nom exact de la migration
+    'date_debut', 
+    'date_fin', 
+    'statut', 
+    'agent_id', 
+    'service_affectation', 
+    'observation_finale'
+];
+    protected $casts = [
+        'date_debut' => 'date',
+        'date_fin' => 'date',
+   ];
 
     public function agent()
     {
