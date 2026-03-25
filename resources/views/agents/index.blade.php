@@ -1,4 +1,36 @@
 <x-app-layout>
+    @if (session('success'))
+        <div id="alert-success"
+            class="flex items-center p-4 mb-4 text-green-800 border border-green-300 rounded-2xl bg-green-50 dark:bg-slate-900 dark:text-green-400 dark:border-green-800 transition-all duration-300"
+            role="alert">
+            <span class="material-symbols-outlined mr-2">check_circle</span>
+            <div class="text-sm font-medium flex-1">
+                <span class="font-bold">Succès !</span> {{ session('success') }}
+            </div>
+            <button type="button"
+                class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 dark:hover:bg-slate-800 inline-flex items-center justify-center h-8 w-8 transition-colors"
+                onclick="this.parentElement.remove()" aria-label="Close">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div id="alert-error"
+            class="flex items-center p-4 mb-4 text-red-800 border border-red-300 rounded-2xl bg-red-50 dark:bg-slate-900 dark:text-red-400 dark:border-red-800 transition-all duration-300"
+            role="alert">
+            <span class="material-symbols-outlined mr-2">info</span>
+            <div class="text-sm font-medium flex-1">
+                <span class="font-bold">Attention :</span> {{ session('error') }}
+            </div>
+            <button type="button"
+                class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 dark:hover:bg-slate-800 inline-flex items-center justify-center h-8 w-8 transition-colors"
+                onclick="this.parentElement.remove()" aria-label="Close">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+    @endif
+
     <div x-data="{
         showModal: false,
         showStatusModal: false,
@@ -167,10 +199,11 @@
                                                         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                                                         : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
                                             @endphp
-                                            <button
-                                                @click="showStatusModal = true; selectedAgent = {name: '{{ $agent->nom }}', id: '{{ $agent->id }}'}"
+                                            <button data-modal-target="status-modal" data-modal-toggle="status-modal"
+                                                data-url="{{ route('agents.update', $agent->id) }}"
+                                                onclick="preparerStatus(event)"
                                                 class="px-5 py-2 rounded-full text-[10px] font-black {{ $statusClasses }} uppercase tracking-widest hover:ring-4 ring-offset-0 transition-all">
-                                                {{ $agent->status ?? 'ACTIF' }}
+                                                {{ $agent->status }}
                                             </button>
                                         </td>
 
@@ -432,7 +465,7 @@
             </div>
         </div>
     </div>
-    {{-- <x-status-agent :agent="$agent" /> --}}
+    <x-status />
     <x-confirm />
 
 </x-app-layout>

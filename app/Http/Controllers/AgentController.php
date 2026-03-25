@@ -8,6 +8,7 @@ use App\Models\Division;
 use App\Models\Bureau;
 use App\Models\Departement;
 use App\Models\Document;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
 class AgentController extends Controller
@@ -106,17 +107,6 @@ class AgentController extends Controller
             return redirect()->route('agents.index')->with('success', 'L\'agent ' . $agent->nom . ' a été enregistré avec succès.');
         });
     }
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:Actif,Déserteur,Âgé,Décédé'
-            ]);
-        $agent = Agent::findOrFail($id);
-        $agent->update([
-            'status' => $request->status
-            ]);
-        return back()->with('success', 'Le statut de l\'agent a été mis à jour.');
-    }
     /**
      * Display the specified resource.
      */
@@ -140,7 +130,34 @@ class AgentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'status' => [
+                'required',
+                Rule::in(['actif', 'deserteur', 'decede', 'retraite']),
+            ],
+        ]);
+        try {
+            $agent = Agent::findOrFail($id);
+
+            if ($agent->status === $validated['status']) {
+                return redirect()
+                    ->back()
+                    ->with('error', "Le statut de l'agent est déjà défini sur : " . ucfirst($agent->status) . ". Aucune modification effectuée.");
+            }
+
+            $agent->update([
+                'status' => $validated['status']
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('success', "Le statut de l'agent {$agent->nom} a été mis à jour avec succès.");
+                
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', "Une erreur est survenue lors de la mise à jour.");
+        }
     }
 
     /**
