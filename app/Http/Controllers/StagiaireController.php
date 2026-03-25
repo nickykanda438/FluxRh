@@ -36,22 +36,28 @@ class StagiaireController extends Controller
             'prenom' => 'required|string|max:100',
             'postnom' => 'nullable|string|max:100',
             'genre' => 'required|in:M,F',
-            'telephone' => 'nullable|string|max:20',
+            'telephone' => 'required|string|max:20',
             'email' => 'required|email|unique:stagiaires,email',
             'type_stagiaire' => 'required|string',
-            'institution_provenance' => 'nullable|string',
-            'domaine_etude_ou_competence' => 'nullable|string',
+            'institution_provenance' => 'required|string',
+            'domaine_etude_ou_competence' => 'required|string',
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after:date_debut',
             'service_affectation' => 'nullable|string',
         ]);
 
-        // 2. Création dans la base de données
-        Stagiaire::create($validated);
+        try {
+                $stagiaire = Stagiaire::create($validated);
 
-        // 3. Redirection avec un message de succès
-        return redirect()->route('stagiaires.index')
-                         ->with('success', 'Le stagiaire a été enregistré avec succès.');
+                return redirect()
+                    ->route('stagiaires.index')
+                    ->with('success', "Le stagiaire {$stagiaire->nom} {$stagiaire->prenom} a été enregistré avec succès.");
+
+            } catch (\Exception $e) {
+                return redirect()
+                    ->back()
+                    ->with('error', "Une erreur est survenue lors de l'enregistrement en base de données.");
+            }
     }
 
     /**
