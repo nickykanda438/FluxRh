@@ -26,8 +26,10 @@
         </div>
     </form>
     <div class="text-center forgotpass"><a href="{{ route('password.request') }}">Mot de passe oublie?</a> </div>
-
-    <div class="text-center dont-have">Vous n'avez pas de compte? <a href="{{ route('register') }}">S'inscrire</a></div>
-    </div>
+    @if (\App\Models\User::count() === 0)
+        <div class="text-center dont-have">
+            Vous n'avez pas de compte ? <a href="{{ route('register') }}">S'inscrire</a>
+        </div>
+    @endif
 
 @endsection

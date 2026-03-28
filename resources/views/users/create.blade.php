@@ -1,13 +1,43 @@
-<form action="{{ route('users.store') }}" method="POST">
-    @csrf
-    <div class="mt-4">
-        <label class="flex items-center">
-            <input type="checkbox" name="is_admin" value="1" class="rounded border-gray-300">
-            <span class="ml-2 text-sm text-gray-600">Définir comme Administrateur</span>
-        </label>
-    </div>
+@extends('auth.auth-layout')
 
-    <button type="submit" class="bg-primary text-white px-4 py-2 rounded">
-        Créer l'utilisateur
-    </button>
-</form>
+
+@section('title', 'Register')
+
+@section('auth-form')
+    <h1 class="mb-3">S'inscrire</h1>
+    <form action="{{ route('users.store') }}" method="POST">
+        @csrf
+        <div class="form-group">
+            <input class="form-control" type="text" name="name" value="{{ old('name') }}" placeholder="Nom">
+        </div>
+        @error('name')
+            <p class="text-red-500 mt-2">{{ $message }}</p>
+        @enderror
+        <div class="form-group">
+            <input class="form-control" type="email" name="email" value="{{ old('email') }}" placeholder="Email">
+        </div>
+        @error('email')
+            <p class="text-red-500 mt-2">{{ $message }}</p>
+        @enderror
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" value="{{ old('password') }}"
+                placeholder="Mot de passe">
+        </div>
+        @error('password')
+            <p class="text-red-500 mt-2">{{ $message }}</p>
+        @enderror
+        <div class="form-group">
+            <input class="form-control" type="password" name="password_confirmation"
+                value="{{ old('password_confirmation') }}" placeholder="Confirmer Mot de passe">
+        </div>
+        @error('password_confirmation')
+            <p class="text-red-500 mt-2">{{ $message }}</p>
+        @enderror
+        <div class="form-group mb-0">
+            <button class="btn btn-primary btn-block" type="submit">S'inscrire</button>
+        </div>
+    </form>
+
+    <div class="text-center dont-have">Vous avez deja un compte? <a href="{{ route('login') }}">Se connecter</a>
+    </div>
+@endsection
