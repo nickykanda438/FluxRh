@@ -36,20 +36,15 @@
         showStatusModal: false,
         selectedAgent: { name: '', id: '' },
         newStatus: ''
-    }"
-        class="min-h-screen bg-slate-50 dark:bg-black font-sans text-slate-900 dark:text-slate-100">
+    }" class="min-h-screen dark:bg-black font-sans text-slate-900 dark:text-slate-100">
 
-        <header
-            class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-sm">
+        <header class=" sticky top-0 z-30 ">
             <div
                 class="max-w-[1600px] mx-auto px-4 lg:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
                     <h2
                         class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter flex items-center gap-3">
-                        <div class="p-2 bg-primary rounded-xl">
-                            <span class="material-symbols-outlined text-white block">badge</span>
-                        </div>
-                        FLUX-RH PRO
+                        Gestion des Agents
                     </h2>
                 </div>
 
@@ -130,7 +125,7 @@
             </div>
 
             <div
-                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] shadow-sm overflow-hidden">
+                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-separate border-spacing-0">
                         <thead>
@@ -466,6 +461,6 @@
         </div>
     </div>
     <x-status />
-    <x-confirm />
+    <x-confirm message="Voulez-vous supprimer cet agent" />
 
 </x-app-layout>
