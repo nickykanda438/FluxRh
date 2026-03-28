@@ -67,7 +67,6 @@
 
 <script>
     function preparerStatus(event) {
-        alert('')
         const url = event.currentTarget.getAttribute('data-url');
         const form = document.getElementById('status-form');
         if (form && url) {

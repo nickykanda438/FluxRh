@@ -61,10 +61,17 @@
                 </div>
                 <div x-show="!isCollapsed" x-transition.opacity class="overflow-hidden">
                     <p class="text-sm font-bold truncate text-slate-900 dark:text-white">
-                        {{ Auth::user()->name ?? 'Utilisateur' }}
+                        {{ Auth::user()->name }}
                     </p>
-                    <p class="text-[10px] text-slate-500 dark:text-slate-500 truncate uppercase tracking-tighter">
-                        Administrateur</p>
+                    @if (Auth::user()->is_admin == 1)
+                        <p class="text-[10px] text-slate-500 dark:text-slate-500 truncate uppercase tracking-tighter">
+                            Administrateur
+                        </p>
+                    @else
+                        <p class="text-[10px] text-slate-500 dark:text-slate-500 truncate uppercase tracking-tighter">
+                            Utilisateur
+                        </p>
+                    @endif
                 </div>
             </div>
 
