@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 
 class StagiaireController extends Controller
 {
-    /**
-     * Affiche la liste des stagiaires.
-     */
+    
     public function index()
     {
         $stagiaires = Stagiaire::all();
@@ -25,12 +23,8 @@ class StagiaireController extends Controller
         return view('stagiaires.index', compact('stagiaires', 'stats'));
     }
 
-    /**
-     * Enregistre un nouveau stagiaire.
-     */
     public function store(Request $request)
     {
-        // 1. Validation des données du formulaire
         $validated = $request->validate([
             'nom' => 'required|string|max:100',
             'prenom' => 'required|string|max:100',
@@ -60,9 +54,6 @@ class StagiaireController extends Controller
             }
     }
 
-    /**
-     * Affiche le formulaire de modification (si vous utilisez une page dédiée).
-     */
     public function edit(Stagiaire $stagiaire)
     {
         return view('stagiaires.edit', compact('stagiaire'));
