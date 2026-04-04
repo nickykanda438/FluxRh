@@ -1,466 +1,188 @@
 <x-app-layout>
-    @if (session('success'))
-        <div id="alert-success"
-            class="flex items-center p-4 mb-4 text-green-800 border border-green-300 rounded-2xl bg-green-50 dark:bg-slate-900 dark:text-green-400 dark:border-green-800 transition-all duration-300"
-            role="alert">
-            <span class="material-symbols-outlined mr-2">check_circle</span>
-            <div class="text-sm font-medium flex-1">
-                <span class="font-bold">Succès !</span> {{ session('success') }}
-            </div>
-            <button type="button"
-                class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 dark:hover:bg-slate-800 inline-flex items-center justify-center h-8 w-8 transition-colors"
-                onclick="this.parentElement.remove()" aria-label="Close">
-                <span class="material-symbols-outlined text-sm">close</span>
-            </button>
-        </div>
-    @endif
+    <div class="min-h-screen bg-slate-50 dark:bg-black font-sans text-slate-900 dark:text-slate-100 p-6 lg:p-10">
+        <div class="max-w-7xl mx-auto">
 
-    @if (session('error'))
-        <div id="alert-error"
-            class="flex items-center p-4 mb-4 text-red-800 border border-red-300 rounded-2xl bg-red-50 dark:bg-slate-900 dark:text-red-400 dark:border-red-800 transition-all duration-300"
-            role="alert">
-            <span class="material-symbols-outlined mr-2">info</span>
-            <div class="text-sm font-medium flex-1">
-                <span class="font-bold">Attention :</span> {{ session('error') }}
-            </div>
-            <button type="button"
-                class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 dark:hover:bg-slate-800 inline-flex items-center justify-center h-8 w-8 transition-colors"
-                onclick="this.parentElement.remove()" aria-label="Close">
-                <span class="material-symbols-outlined text-sm">close</span>
-            </button>
-        </div>
-    @endif
-
-    <div x-data="{
-        showModal: false,
-        showStatusModal: false,
-        selectedAgent: { name: '', id: '' },
-        newStatus: ''
-    }" class="min-h-screen dark:bg-black font-sans text-slate-900 dark:text-slate-100">
-
-        <header class=" sticky top-0 z-30 ">
-            <div
-                class="max-w-[1600px] mx-auto px-4 lg:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+            {{-- 1. HEADER : TITRE ET ACTION PRINCIPALE --}}
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
-                    <h2
-                        class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter flex items-center gap-3">
-                        Gestion des Agents
+                    <h2 class="text-3xl font-black tracking-tighter uppercase italic">
+                        FluxRh <span class="text-blue-600">/</span> Annuaire
                     </h2>
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">
+                        Tableau de bord de gestion du personnel
+                    </p>
                 </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="relative group">
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-3 text-slate-400 text-sm">search</span>
-                        <input type="text" placeholder="Recherche matricule ou nom..."
-                            class="pl-10 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl text-xs w-72 focus:ring-2 focus:ring-primary/20 transition-all font-medium">
-                    </div>
-                    <button @click="showModal = true"
-                        class="px-6 py-3 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-primary/30 hover:bg-primary/90 transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">person_add</span>
-                        Nouvel Agent
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <main class="p-6 lg:p-8 max-w-[1600px] mx-auto space-y-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div
-                    class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-green-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-green-50 dark:bg-green-500/10 text-green-600 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined">check_circle</span>
-                        </div>
-                        <span
-                            class="text-[10px] font-black text-green-600 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-md uppercase">En
-                            poste</span>
-                    </div>
-                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countActifs'] }}</h4>
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Agents Actifs</p>
-                </div>
-
-                <div
-                    class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-amber-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-amber-50 dark:bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined">directions_run</span>
-                        </div>
-                        <span
-                            class="text-[10px] font-black text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded-md uppercase">Alerte</span>
-                    </div>
-                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countDeserteurs'] }}</h4>
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Desertersw</p>
-                </div>
-
-                <div
-                    class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-blue-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 text-blue-600 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined">elderly</span>
-                        </div>
-                        <span
-                            class="text-[10px] font-black text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-md uppercase">Retraite</span>
-                    </div>
-                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countRetraite'] }}</h4>
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Agents Âgés</p>
-                </div>
-
-                <div
-                    class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-red-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-red-600 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined">heart_broken</span>
-                        </div>
-                        <span
-                            class="text-[10px] font-black text-red-600 bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded-md uppercase">Inactif</span>
-                    </div>
-                    <h4 class="text-3xl font-black tracking-tighter">{{ $stats['countDecedes'] }}</h4>
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Décédés</p>
-                </div>
+                
+                <a href="{{ route('agents.create') }}" class="group px-8 py-4 bg-blue-600 text-white rounded-2xl shadow-xl shadow-blue-600/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-xl">person_add</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Nouvel Agent</span>
+                </a>
             </div>
 
-            <div
-                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm overflow-hidden">
+            {{-- 2. SECTION STATISTIQUES (CARDS) --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                
+                @php
+                    $total = $agents->count();
+                    $males = $agents->where('genre', 'M')->count();
+                    $females = $agents->where('genre', 'F')->count();
+                    
+                    // Calcul des pourcentages pour la barre de progression
+                    $percM = $total > 0 ? ($males / $total) * 100 : 0;
+                    $percF = $total > 0 ? ($females / $total) * 100 : 0;
+                @endphp
+
+                {{-- Card Effectif Total --}}
+                <div class="relative overflow-hidden bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-600">groups</span>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <div class="text-[10px] font-black uppercase tracking-widest text-slate-400">Effectif</div>
+                            <div class="text-[9px] font-bold text-blue-500 uppercase">{{ $males }}H / {{ $females }}F</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">{{ $total }}</div>
+                    
+                    {{-- Barre de progression dynamique sans erreur de syntaxe --}}
+                    <div class="mt-4 flex items-center gap-2">
+                        <div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex" 
+                             style="--width-m: {{ $percM }}%; --width-f: {{ $percF }}%;">
+                            <div class="h-full bg-blue-500 transition-all duration-500" style="width: var(--width-m)"></div>
+                            <div class="h-full bg-pink-500 transition-all duration-500" style="width: var(--width-f)"></div>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-400">{{ round($percM) }}% / {{ round($percF) }}%</span>
+                    </div>
+                </div>
+
+                {{-- Card Déserteurs --}}
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-red-600">person_off</span>
+                        </div>
+                        <span class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 text-[9px] font-black rounded-lg uppercase">Alerte</span>
+                    </div>
+                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">
+                        {{ $agents->where('statut', 'Déserteur')->count() }}
+                    </div>
+                    <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">Déserteurs</div>
+                </div>
+
+                {{-- Card Retraités --}}
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-emerald-600">elderly</span>
+                        </div>
+                        <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 text-[9px] font-black rounded-lg uppercase">Archive</span>
+                    </div>
+                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">
+                        {{ $agents->where('statut', 'Retraité')->count() }}
+                    </div>
+                    <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">Retraités</div>
+                </div>
+
+                {{-- Card Actifs --}}
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-2xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-amber-600">verified_user</span>
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
+                    </div>
+                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">
+                        {{ $agents->where('statut', 'Actif')->count() }}
+                    </div>
+                    <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">En service</div>
+                </div>
+            </div>
+
+            {{-- 3. BARRE DE RECHERCHE --}}
+            <div class="mb-8 flex gap-4">
+                <form action="{{ route('agents.index') }}" method="GET" class="relative flex-1 group">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">search</span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Rechercher par nom ou matricule..." 
+                           class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-4 pl-12 text-xs font-medium focus:ring-2 focus:ring-blue-500 shadow-sm outline-none">
+                </form>
+            </div>
+
+            {{-- 4. TABLEAU DES AGENTS --}}
+            <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-separate border-spacing-0">
+                    <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 dark:bg-slate-800/50">
-                                <th
-                                    class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">
-                                    Matricule
-                                </th>
-                                <th
-                                    class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">
-                                    Agent
-                                </th>
-                                <th
-                                    class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800">
-                                    Affectation
-                                </th>
-                                <th
-                                    class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 text-center">
-                                    Statut
-                                </th>
-                                <th
-                                    class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 text-right">
-                                    Actions
-                                </th>
+                            <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
+                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Agent</th>
+                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Matricule</th>
+                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Département & Fonction</th>
+                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Localisation</th>
+                                <th class="p-6 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                            @if ($agents->isEmpty())
-                                <tr>
-                                    <td colspan="5" class="px-8 py-6 text-center text-slate-500 dark:text-slate-400">
-                                        Aucun agent trouvé.
-                                    </td>
-                                </tr>
-                            @else
-                                @foreach ($agents as $agent)
-                                    <tr class="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all">
-                                        <td class="px-8 py-6 text-sm font-black text-primary italic uppercase">
-                                            {{ $agent->matricule }}
-                                        </td>
-
-                                        <td class="px-8 py-6">
-                                            <p class="text-sm font-black uppercase tracking-tight">
-                                                {{ $agent->nom }} {{ $agent->postnom }} {{ $agent->prenom }}
-                                            </p>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">
-                                                {{ $agent->fonction ?? 'Agent' }}
-                                            </p>
-                                        </td>
-
-                                        <td class="px-8 py-6">
-                                            <div class="flex flex-col gap-1">
-                                                <span
-                                                    class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-[10px] font-black uppercase w-fit">
-                                                    {{ $agent->bureau->nom ?? 'N/A' }}
-                                                </span>
-                                                <span class="text-[9px] text-slate-400 font-bold px-1 uppercase">
-                                                    {{ $agent->bureau->division->nom ?? 'Direction' }}
-                                                </span>
-                                            </div>
-                                        </td>
-
-                                        <td class="px-8 py-6 text-center">
-                                            @php
-                                                $statusClasses =
-                                                    $agent->status === 'ACTIF'
-                                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                                                        : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
-                                            @endphp
-                                            <button data-modal-target="status-modal" data-modal-toggle="status-modal"
-                                                data-url="{{ route('agents.update', $agent->id) }}"
-                                                onclick="preparerStatus(event)"
-                                                class="px-5 py-2 rounded-full text-[10px] font-black {{ $statusClasses }} uppercase tracking-widest hover:ring-4 ring-offset-0 transition-all">
-                                                {{ $agent->status }}
+                            @forelse($agents as $agent)
+                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
+                                <td class="p-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-blue-600 font-black text-xs uppercase shadow-sm">
+                                            {{ strtoupper(substr($agent->nom, 0, 1) . substr($agent->prenom, 0, 1)) }}
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-black text-slate-800 dark:text-slate-100 uppercase italic">{{ $agent->nom }} {{ $agent->prenom }}</div>
+                                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{{ $agent->email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-6">
+                                    <span class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-[10px] font-black text-blue-600 uppercase tracking-widest italic border border-blue-100 dark:border-blue-800">
+                                        #{{ $agent->matricule }}
+                                    </span>
+                                </td>
+                                <td class="p-6">
+                                    <div class="text-xs font-bold text-slate-600 dark:text-slate-300">{{ $agent->fonction }}</div>
+                                    <div class="text-[10px] text-slate-400 font-black uppercase tracking-tighter">{{ $agent->departement }}</div>
+                                </td>
+                                <td class="p-6">
+                                    <div class="text-xs font-bold">{{ $agent->ville }}</div>
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase">{{ $agent->province }}</div>
+                                </td>
+                                <td class="p-6 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a href="{{ route('agents.show', $agent->id) }}" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
+                                            <span class="material-symbols-outlined text-lg">visibility</span>
+                                        </a>
+                                        <a href="{{ route('agents.edit', $agent->id) }}" class="p-2 text-slate-400 hover:text-amber-500 transition-colors">
+                                            <span class="material-symbols-outlined text-lg">edit_note</span>
+                                        </a>
+                                        <form action="{{ route('agents.destroy', $agent->id) }}" method="POST" class="inline" onsubmit="return confirm('Confirmer la suppression ?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                                                <span class="material-symbols-outlined text-lg">delete_sweep</span>
                                             </button>
-                                        </td>
-
-                                        <td class="px-8 py-6">
-                                            <div class="flex items-center justify-end gap-2">
-                                                <a href="{{ route('agents.show', $agent->id) }}" title="Voir Fiche"
-                                                    class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all">
-                                                    <span class="material-symbols-outlined text-lg">visibility</span>
-                                                </a>
-
-                                                <a href="{{ route('agents.edit', $agent->id) }}" title="Modifier"
-                                                    class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-all">
-                                                    <span class="material-symbols-outlined text-lg">edit_note</span>
-                                                </a>
-                                                <a data-modal-target="popup-modal" data-modal-toggle="popup-modal"
-                                                    onclick="supprimer(event)"
-                                                    data-url="{{ route('agents.destroy', $agent->id) }}"
-                                                    class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 cursor-pointer">
-                                                    <span
-                                                        class="material-symbols-outlined text-lg">delete_forever</span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="p-24 text-center">
+                                    <div class="flex flex-col items-center opacity-30">
+                                        <span class="material-symbols-outlined text-7xl">person_search</span>
+                                        <p class="font-black uppercase text-[10px] tracking-[0.2em] mt-4 italic text-slate-500">
+                                            La base de données est actuellement vide
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </main>
-
-        <div x-show="showModal" x-transition.opacity
-            class="fixed inset-0 z-[100] overflow-y-auto flex items-center justify-center p-4">
-            <div class="fixed inset-0 bg-slate-900/90 backdrop-blur-xl" @click="showModal = false"></div>
-
-            <div
-                class="relative bg-white dark:bg-slate-900 w-full max-w-6xl rounded-[3rem] shadow-2xl flex flex-col max-h-[95vh] overflow-hidden border border-white/10">
-                <div
-                    class="px-12 py-8 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white/50 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-10">
-                    <div>
-                        <h3
-                            class="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter italic">
-                            Nouveau Dossier Agent</h3>
-                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Saisie complète des
-                            données administratives et de carrière</p>
-                    </div>
-                    <button @click="showModal = false"
-                        class="w-14 h-14 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-[1.5rem] hover:bg-red-500 hover:text-white transition-all group">
-                        <span class="material-symbols-outlined group-hover:rotate-90 transition-transform">close</span>
-                    </button>
-                </div>
-
-                <form id="fullAgentForm" action="{{ route('agents.store') }}" method="POST"
-                    class="p-12 overflow-y-auto bg-slate-50/30 dark:bg-slate-900/30 space-y-12"
-                    enctype="multipart/form-data">
-                    @csrf
-
-                    <section class="space-y-6">
-                        <div class="flex items-center gap-4">
-                            <h4 class="text-xs font-black uppercase text-primary tracking-[0.4em]">01. Identité & État
-                                Civil</h4>
-                            <div class="h-[1px] flex-1 bg-primary/20"></div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Matricule</label>
-                                <input type="text" name="matricule" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm focus:ring-4 focus:ring-primary/10 transition-all"
-                                    placeholder="Ex: AG-2026-000">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Nom</label>
-                                <input type="text" name="nom" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Postnom</label>
-                                <input type="text" name="postnom"
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Prénom</label>
-                                <input type="text" name="prenom" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Date de
-                                    naissance</label>
-                                <input type="date" name="date_naissance" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Lieu de
-                                    naissance</label>
-                                <input type="text" name="lieu_naissance" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Genre</label>
-                                <select name="genre"
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                                    <option value="M">Masculin</option>
-                                    <option value="F">Féminin</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">État Civil</label>
-                                <select name="etat_civil"
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                                    <option value="Célibataire">Célibataire</option>
-                                    <option value="Marié(e)">Marié(e)</option>
-                                    <option value="Veuf(ve)">Veuf(ve)</option>
-                                    <option value="Divorcé(e)">Divorcé(e)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Nombre
-                                    d'enfants</label>
-                                <input type="number" name="nbre_enfant" value="0" min="0"
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="space-y-6">
-                        <div class="flex items-center gap-4">
-                            <h4 class="text-xs font-black uppercase text-amber-500 tracking-[0.4em]">02. Coordonnées &
-                                Adresse</h4>
-                            <div class="h-[1px] flex-1 bg-amber-500/20"></div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Téléphone</label>
-                                <input type="tel" name="telephone" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm"
-                                    placeholder="+243...">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Email</label>
-                                <input type="email" name="email" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm"
-                                    placeholder="agent@fluxrh.cd">
-                            </div>
-                            <div class="md:col-span-1">
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Bureau
-                                    d'affectation</label>
-                                <select name="bureau_id" required
-                                    class="w-full mt-2 px-5 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm text-sm">
-                                    @foreach ($bureaus as $bureau)
-                                        <option value="{{ $bureau->id }}">{{ $bureau->nom }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="space-y-8">
-                        <div class="flex items-center gap-4">
-                            <h4 class="text-xs font-black uppercase text-slate-900 dark:text-white tracking-[0.4em]">
-                                06. Documents & Biométrie
-                            </h4>
-                            <div class="h-[1px] flex-1 bg-slate-200 dark:bg-slate-800"></div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div
-                                class="p-8 bg-white dark:bg-slate-800 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-primary transition-all group shadow-sm">
-                                <div
-                                    class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform">
-                                    <span class="material-symbols-outlined text-3xl">school</span>
-                                </div>
-
-                                <div class="space-y-4">
-                                    <div>
-                                        <p
-                                            class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest text-center">
-                                            Diplôme Académique</p>
-                                        <input type="file" name="doc_diplome"
-                                            class="block w-full text-[10px] text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-primary file:text-white hover:file:bg-primary/90 cursor-pointer">
-                                    </div>
-
-                                    <div
-                                        class="grid grid-cols-1 gap-2 pt-4 border-t border-slate-100 dark:border-slate-700">
-                                        <input type="text" name="ref_diplome" placeholder="N° Réf / Matricule"
-                                            class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-[11px] focus:ring-2 focus:ring-primary/20">
-                                        <input type="date" name="date_diplome"
-                                            class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-[11px] text-slate-500">
-                                        <input type="hidden" name="type_diplome" value="Diplôme">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="p-8 bg-white dark:bg-slate-800 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-amber-500 transition-all group shadow-sm">
-                                <div
-                                    class="w-14 h-14 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform">
-                                    <span class="material-symbols-outlined text-3xl">fingerprint</span>
-                                </div>
-
-                                <div class="space-y-4">
-                                    <div>
-                                        <p
-                                            class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest text-center">
-                                            Carte Biométrique</p>
-                                        <input type="file" name="doc_biometrie"
-                                            class="block w-full text-[10px] text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-amber-500 file:text-white hover:file:bg-amber-600 cursor-pointer">
-                                    </div>
-
-                                    <div
-                                        class="grid grid-cols-1 gap-2 pt-4 border-t border-slate-100 dark:border-slate-700">
-                                        <input type="text" name="ref_biometrie" placeholder="N° de Carte"
-                                            class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-[11px] focus:ring-2 focus:ring-amber-500/20">
-                                        <input type="date" name="date_biometrie"
-                                            class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-[11px] text-slate-500">
-                                        <input type="hidden" name="type_biometrie" value="Carte Biométrique">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="p-8 bg-white dark:bg-slate-800 rounded-[2.5rem] border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-purple-500 transition-all group shadow-sm">
-                                <div
-                                    class="w-14 h-14 bg-purple-500/10 text-purple-500 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform">
-                                    <span class="material-symbols-outlined text-3xl">description</span>
-                                </div>
-
-                                <div class="space-y-4">
-                                    <div>
-                                        <p
-                                            class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest text-center">
-                                            Acte d'affectation</p>
-                                        <input type="file" name="doc_affectation"
-                                            class="block w-full text-[10px] text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-purple-500 file:text-white hover:file:bg-purple-600 cursor-pointer">
-                                    </div>
-
-                                    <div
-                                        class="grid grid-cols-1 gap-2 pt-4 border-t border-slate-100 dark:border-slate-700">
-                                        <input type="text" name="ref_affectation" placeholder="Référence Acte"
-                                            class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-[11px] focus:ring-2 focus:ring-purple-500/20">
-                                        <input type="date" name="date_affectation"
-                                            class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-[11px] text-slate-500">
-                                        <input type="hidden" name="type_affectation" value="Acte d'affectation">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </form>
-
-                <div
-                    class="px-12 py-8 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end gap-6 items-center">
-                    <button @click="showModal = false"
-                        class="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors">Abandonner</button>
-                    <button type="submit" form="fullAgentForm"
-                        class="px-14 py-4 bg-primary text-white text-xs font-black uppercase tracking-[0.2em] rounded-[1.5rem] shadow-2xl shadow-primary/40 hover:scale-105 active:scale-95 transition-all">Valider
-                        l'enregistrement</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <x-status />
-    <x-confirm message="Voulez-vous supprimer cet agent" />
-
+            </div> {{-- FIN TABLEAU --}}
+            
+        </div> {{-- FIN MAX-W-7XL --}}
+    </div> {{-- FIN MIN-H-SCREEN --}}
 </x-app-layout>

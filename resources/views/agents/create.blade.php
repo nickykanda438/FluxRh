@@ -1,197 +1,238 @@
 <x-app-layout>
-    <header
-        class="bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-2 lg:py-6 sticky top-0 z-10">
-        <div class="flex items-center justify-between max-w-5xl mx-auto gap-4">
-            <button @click="sidebarOpen = true"
-                class="lg:hidden p-2 -ml-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-            <div>
-                <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-2">
-                    <span>Agents</span>
-                    <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-                    <span class="text-primary font-medium">Nouveau profil</span>
-                </nav>
-                <h2 class="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Ajouter un Agent</h2>
+    <div class="min-h-screen bg-slate-50 dark:bg-black font-sans text-slate-900 dark:text-slate-100 p-6 lg:p-10">
+        <div class="max-w-6xl mx-auto">
+            
+            {{-- HEADER --}}
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+                        <span class="material-symbols-outlined text-white text-3xl">person_add</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black tracking-tighter uppercase italic">FluxRh <span class="text-blue-600">/</span> Enregistrement Agent</h2>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Dossier complet du personnel</p>
+                    </div>
+                </div>
+                <a href="{{ route('agents.index') }}" class="px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Retour
+                </a>
             </div>
-            <div class="flex flex-shrink-0 gap-2 lg:gap-3">
-                <button
-                    class="px-6 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg transition-all">
-                    Annuler
-                </button>
-                <button
-                    class="px-6 py-2.5 text-sm font-semibold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">save</span>
-                    <span class="hidden sm:inline">Enregistrer l'agent</span>
-                    <span class="sm:hidden">Enregistrer</span>
-                </button>
-            </div>
-        </div>
-    </header>
-    <div class="px-2 lg:px-4 py-2 lg:py-4">
-        <div class="max-w-5xl mx-auto space-y-8">
-            <section
-                class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-                <div
-                    class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                    <h3 class="text-sm font-bold text-primary flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">badge</span>
-                        1. INFORMATIONS IDENTITAIRES
-                    </h3>
-                </div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Matricule</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            placeholder="Ex: AG-2024-001" type="text" />
-                    </div>
-                    <div class="flex flex-col gap-1.5 lg:col-span-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Nom / Postnom /
-                            Prénom</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            placeholder="Entrez le nom complet" type="text" />
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Date de
-                            naissance</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            type="date" />
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Lieu de
-                            naissance</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            placeholder="Ville ou province" type="text" />
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Genre</label>
-                        <select
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary">
-                            <option value="">Sélectionner</option>
-                            <option value="M">Masculin</option>
-                            <option value="F">Féminin</option>
-                        </select>
-                    </div>
-                </div>
-            </section>
-            <section
-                class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-                <div
-                    class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                    <h3 class="text-sm font-bold text-primary flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">family_restroom</span>
-                        2. ÉTAT CIVIL & FAMILLE
-                    </h3>
-                </div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">État Civil</label>
-                        <select
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary">
-                            <option value="Célibataire">Célibataire</option>
-                            <option value="Marié">Marié(e)</option>
-                            <option value="Divorcé">Divorcé(e)</option>
-                            <option value="Veuf">Veuf/Veuve</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre
-                            d'enfants</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            min="0" placeholder="0" type="number" />
-                    </div>
-                </div>
-            </section>
-            <section
-                class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-                <div
-                    class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                    <h3 class="text-sm font-bold text-primary flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">location_on</span>
-                        3. CONTACT & LOCALISATION
-                    </h3>
-                </div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Téléphone</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            placeholder="+243 ..." type="tel" />
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Email
-                            Professionnel</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            placeholder="nom.prenom@entreprise.com" type="email" />
-                    </div>
-                    <div class="flex flex-col gap-1.5 md:col-span-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Adresse
-                            complète</label>
-                        <textarea
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            placeholder="N°, Avenue, Quartier, Commune, Ville" rows="2"></textarea>
-                    </div>
-                </div>
-            </section>
-            <section
-                class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden mb-12">
-                <div
-                    class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                    <h3 class="text-sm font-bold text-primary flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">payments</span>
-                        4. POSTE & RÉMUNÉRATION
-                    </h3>
-                </div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Grade</label>
-                        <select
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary">
-                            <option value="">Sélectionner un grade</option>
-                            <option value="Directeur">Directeur</option>
-                            <option value="Chef de Division">Chef de Division</option>
-                            <option value="Chef de Bureau">Chef de Bureau</option>
-                            <option value="Attaché d'Administration">Attaché d'Administration</option>
-                            <option value="Agent de Collaboration">Agent de Collaboration</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Statut</label>
-                        <select
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary">
-                            <option value="Actif">Actif</option>
-                            <option value="Non_actif">Non actif</option>
-                            <option value="Déserteur">Déserteur</option>
-                            <option value="Décédé">Décédé</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Rémunération de base
-                            (CDF/USD)</label>
-                        <div class="relative">
-                            <span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium text-sm">$</span>
-                            <input
-                                class="w-full pl-7 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                                placeholder="0.00" type="number" />
+
+            <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <form action="{{ route('agents.store') }}" method="POST" enctype="multipart/form-data" class="p-8 lg:p-12 space-y-12">
+                    @csrf
+
+                    {{-- SECTION 1 : IDENTITÉ & ÉTAT-CIVIL --}}
+                    <section>
+                        <div class="flex items-center mb-8 text-blue-600 dark:text-blue-400 font-black text-[10px] uppercase tracking-[0.2em]">
+                            <span class="mr-2 italic text-sm">01.</span> Identité & État-Civil
+                            <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800 ml-4"></div>
                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div class="md:col-span-1">
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Matricule *</label>
+                                <input type="text" name="matricule" value="{{ old('matricule') }}" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner" required>
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Catégorie Grade</label>
+                                <input type="text" name="categorie_grade" value="{{ old('categorie_grade') }}" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Nom *</label>
+                                <input type="text" name="nom" value="{{ old('nom') }}" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner" required>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Prénom *</label>
+                                <input type="text" name="prenom" value="{{ old('prenom') }}" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner" required>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Postnom</label>
+                                <input type="text" name="postnom" value="{{ old('postnom') }}" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Genre</label>
+                                <select name="genre" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                                    <option value="M">Masculin</option>
+                                    <option value="F">Féminin</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">État Civil</label>
+                                <select name="etat_civil" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                                    <option value="Célibataire">Célibataire</option>
+                                    <option value="Marié">Marié</option>
+                                    <option value="Veuf">Veuf</option>
+                                    <option value="Divorcé">Divorcé</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Date de Naissance</label>
+                                <input type="date" name="date_naissance" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Lieu de Naissance</label>
+                                <input type="text" name="lieu_naissance" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Nbre d'enfants</label>
+                                <input type="number" name="nbre_enfant" value="0" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- SECTION 2 : CONTACT & LOCALISATION --}}
+                    <section>
+                        <div class="flex items-center mb-8 text-green-600 dark:text-green-400 font-black text-[10px] uppercase tracking-[0.2em]">
+                            <span class="mr-2 italic text-sm">02.</span> Contact & Localisation
+                            <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800 ml-4"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Téléphone</label>
+                                <input type="tel" name="telephone" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Email Professionnel</label>
+                                <input type="email" name="email" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Pays</label>
+                                <input type="text" name="pays" value="RDC" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Province</label>
+                                <input type="text" name="province" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Ville</label>
+                                <input type="text" name="ville" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div class="md:col-span-3">
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Adresse Résidentielle</label>
+                                <textarea name="adresse" rows="2" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner"></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- SECTION 3 : ÉTUDES & DIPLÔMES --}}
+                    <section>
+                        <div class="flex items-center mb-8 text-purple-600 dark:text-purple-400 font-black text-[10px] uppercase tracking-[0.2em]">
+                            <span class="mr-2 italic text-sm">03.</span> Études & Formation
+                            <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800 ml-4"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Niveau d'étude</label>
+                                <input type="text" name="niveau_etude" placeholder="Ex: Licence" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Domaine d'étude</label>
+                                <input type="text" name="domaine_etude" placeholder="Ex: Informatique" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Institution</label>
+                                <input type="text" name="institution" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Année d'obtention</label>
+                                <input type="text" name="annee_obtention" placeholder="YYYY" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                        </div>
+                        
+                        <div class="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                            <label class="block mb-4 text-[10px] font-black uppercase text-purple-600 tracking-wider italic">Upload Documents (Diplômes, Certificats, Attestations)</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="file" name="documents[]" multiple class="text-[10px] text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-purple-600 file:text-white">
+                                <input type="text" name="ref_document" placeholder="Référence Document" class="text-[10px] p-2 rounded-lg border-none bg-white dark:bg-slate-900 shadow-sm">
+                                <input type="date" name="date_obtention" class="text-[10px] p-2 rounded-lg border-none bg-white dark:bg-slate-900 shadow-sm">
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- SECTION 4 : AFFECTATION & CARRIÈRE --}}
+                    <section>
+                        <div class="flex items-center mb-8 text-amber-600 dark:text-amber-400 font-black text-[10px] uppercase tracking-[0.2em]">
+                            <span class="mr-2 italic text-sm">04.</span> Structure & Affectation
+                            <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800 ml-4"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Département</label>
+                                <input type="text" name="departement" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Division</label>
+                                <input type="text" name="division" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Coordination</label>
+                                <input type="text" name="coordination" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Bureau *</label>
+                                <select name="bureau" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner cursor-pointer" required>
+                                    <option value="Comptabilité">Comptabilité</option>
+                                    <option value="Audit">Audit</option>
+                                    <option value="Ressources Humaines">Ressources Humaines</option>
+                                    <option value="Logistique">Logistique</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Unité</label>
+                                <input type="text" name="unite" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Position / Fonction</label>
+                                <input type="text" name="position" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Commission d'affectation</label>
+                                <input type="text" name="commission" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Date d'embauche</label>
+                                <input type="date" name="date_embauche" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- SECTION 5 : ACTES & RÉMUNÉRATION --}}
+                    <section>
+                        <div class="flex items-center mb-8 text-rose-600 dark:text-rose-400 font-black text-[10px] uppercase tracking-[0.2em]">
+                            <span class="mr-2 italic text-sm">05.</span> Actes Administratifs & Finances
+                            <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800 ml-4"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Nature de l'acte</label>
+                                <input type="text" name="nature_acte" placeholder="Ex: Décision, Décret" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Numéro Arrêté</label>
+                                <input type="text" name="arrete" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider">Rémunération ($)</label>
+                                <input type="number" step="0.01" name="remuneration" class="bg-slate-50 dark:bg-slate-800 border-none text-sm rounded-xl w-full p-4 focus:ring-2 focus:ring-blue-500 shadow-inner font-black text-rose-600">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-[10px] font-black uppercase text-slate-500 tracking-wider italic">Carte Biométrique (Scan)</label>
+                                <input type="file" name="carte_biometrique" class="text-[10px] text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-rose-600 file:text-white">
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- BOUTONS --}}
+                    <div class="pt-12 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-end gap-4">
+                        <button type="reset" class="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">
+                            Vider les champs
+                        </button>
+                        <button type="submit" class="px-12 py-4 bg-blue-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-blue-600/30 hover:scale-105 active:scale-95 transition-all">
+                            Enregistrer le dossier
+                        </button>
                     </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Réf. Carte
-                            Biométrique</label>
-                        <input
-                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary"
-                            placeholder="ID-XXXX-XXXX" type="text" />
-                    </div>
-                </div>
-            </section>
-            <div class="h-20"></div>
+                </form>
+            </div>
         </div>
     </div>
 </x-app-layout>
