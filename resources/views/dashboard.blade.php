@@ -281,19 +281,5 @@
         </section>
     </div>
 
-    <nav
-        class="lg:hidden sticky bottom-0 bg-white/80 backdrop-blur-md dark:bg-slate-900/80 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around py-3">
-        <a class="flex flex-col items-center gap-1 text-blue-600" href="#">
-            <span class="material-symbols-outlined">dashboard</span>
-            <span class="text-[10px] font-bold uppercase">Dashboard</span>
-        </a>
-        <a class="flex flex-col items-center gap-1 text-slate-400" href="#">
-            <span class="material-symbols-outlined">groups</span>
-            <span class="text-[10px] font-bold uppercase">Agents</span>
-        </a>
-        <a class="flex flex-col items-center gap-1 text-slate-400" href="#">
-            <span class="material-symbols-outlined">analytics</span>
-            <span class="text-[10px] font-bold uppercase">Rapports</span>
-        </a>
-    </nav>
+
 </x-app-layout>

@@ -30,26 +30,45 @@
 
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100"
-    x-data="{ sidebarOpen: false }">
+<body class="bg-gray-50 dark:bg-gray-900 font-sans text-slate-900 dark:text-slate-100" x-data="{ sidebarOpen: false }">
 
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen relative">
 
-        @include('layouts.navigation')
+        <div x-show="sidebarOpen" x-transition:enter="transition opacity-ease-out duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition opacity-ease-in duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" @click="sidebarOpen = false"
+            class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden">
+        </div>
 
-        {{-- Contenu --}}
-        <main class="flex-1 ml-0 lg:ml-72">
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out lg:translate-x-0">
 
-            {{-- <x-header/> --}}
+            @include('layouts.navigation')
 
-            <div class="px-4 lg:px-8 py-6 lg:py-8">
-                {{ $slot }}
-            </div>
+        </aside>
 
-        </main>
+        <div class="flex flex-col flex-1 min-w-0 lg:pl-72">
+
+            <header
+                class="sticky top-0 z-30 flex items-center justify-between h-16 px-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur border-b border-gray-200 dark:border-gray-700 lg:hidden">
+                <button @click="sidebarOpen = true" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <span class="font-bold">{{ config('app.name') }}</span>
+                <div class="w-10"></div>
+            </header>
+
+            <main class="flex-1">
+                <div class="py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-7xl mx-auto">
+                        {{ $slot }}
+                    </div>
+                </div>
+            </main>
+        </div>
 
     </div>
-
 </body>
 
 </html>
