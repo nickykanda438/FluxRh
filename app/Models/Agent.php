@@ -5,79 +5,73 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Agent extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * Les attributs qui peuvent être assignés en masse.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        // Identité de base
         'matricule',
+        'categorie_grade',
         'nom',
-        'postnom',
         'prenom',
+        'postnom',
         'genre',
         'date_naissance',
         'lieu_naissance',
         'etat_civil',
         'telephone',
         'email',
-        'adresse',
         'nbre_enfant',
-        
-        // Études & Formation
         'niveau_etude',
         'domaine_etude',
         'annee_obtention',
         'nom_institution',
-        'pays_etude',
-
-        // Localisation & Structure
+        'pays',
         'province',
         'ville',
         'coordination',
         'unite',
         'departement',
-        'division_nom',
+        'division_id',
         'bureau_id',
-
-        // Professionnel & Carrière
-        'categorie_grade',
-        'position',
-        'date_embauche',
-        'commission_affectation',
-        'arrete',
-        'remuneration',
-        'nature_acte',
-        'status'
+        'status',
     ];
 
     /**
-     * Relations
+     * Les attributs qui doivent être castés.
+     *
+     * @var array<string, string>
      */
+    protected $casts = [
+        'date_naissance' => 'date',
+        'nbre_enfant' => 'integer',
+        'annee_obtention' => 'integer',
+    ];
 
-    public function stagiaires()
+    /**
+     * Obtient la division à laquelle appartient l'agent.
+     */
+    public function division(): BelongsTo
     {
-        return $this->hasMany(Stagiaire::class);
-    }
-
-    public function documents()
-    {
-        return $this->hasMany(Document::class);
-    }
-
-    public function bureau()
-    {
-        return $this->belongsTo(Bureau::class);
+        return $this->belongsTo(Division::class);
     }
 
     /**
-     * Accesseurs & Utilitaires (Optionnel)
+     * Obtient le bureau auquel appartient l'agent.
      */
-
-    // Pour afficher le nom complet facilement
-    public function getFullNameAttribute()
+    public function bureau(): BelongsTo
     {
-        return "{$this->nom} {$this->postnom} {$this->prenom}";
+        return $this->belongsTo(Bureau::class);
+    }
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
     }
 }

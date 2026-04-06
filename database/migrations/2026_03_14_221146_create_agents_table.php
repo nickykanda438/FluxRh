@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('agents', function (Blueprint $table) {
             $table->id();
             $table->string('matricule')->unique();
+            $table->string('categorie_grade');
             $table->string('nom');
             $table->string('prenom');
             $table->string('postnom')->nullable();
@@ -24,7 +25,18 @@ return new class extends Migration
             $table->string('telephone');
             $table->string('email')->unique();
             $table->integer('nbre_enfant')->default(0);
-            $table->foreignId('bureau_id')->constrained()->onDelete('cascade');
+            $table->string('niveau_etude');
+            $table->string('domaine_etude');
+            $table->integer('annee_obtention')->nullable();
+            $table->string('nom_institution')->nullable();
+            $table->string('pays')->nullable();
+            $table->string('province');
+            $table->string('ville');
+            $table->string('coordination')->nullable();
+            $table->string('unite')->nullable();
+            $table->string('departement')->nullable();
+            $table->foreignId('division_id')->constrained('divisions')->onDelete('cascade');
+            $table->foreignId('bureau_id')->constrained('bureaus')->onDelete('cascade');
             $table->enum('status', ['actif', 'deserteur', 'decede', 'retraite'])->default('actif');
             $table->timestamps();
             $table->softDeletes(); 

@@ -10,6 +10,7 @@ use App\Models\Departement;
 use App\Models\Document;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class AgentController extends Controller
 {
@@ -19,6 +20,9 @@ class AgentController extends Controller
     public function index()
     {
         $agents = Agent::with(['bureau.division'])->latest()->paginate(10);
+        $bureaux = Bureau::all();
+        $divisions = Division::all();
+
 
         $stats = [
             'countActifs' => Agent::where('status', 'Actif')->count(),
@@ -26,11 +30,7 @@ class AgentController extends Controller
             'countRetraite' => Agent::where('date_naissance', '<=', now()->subYears(55))->count(),
             'countDecedes' => Agent::where('status', 'Décédé')->count(),
         ];
-
-        $departments = Departement::all();
-        $bureaus = Bureau::all();
-
-        return view('agents.index', compact('agents', 'stats', 'departments', 'bureaus'));
+        return view('agents.index', compact('agents', 'stats', 'bureaux', 'divisions'));
     }
 
     /**
@@ -38,99 +38,83 @@ class AgentController extends Controller
      */
     public function create()
     {
-        $bureaus = Bureau::all();
-        return view('agents.create', compact('bureaus'));
+        $bureaux = Bureau::all();
+        $divisions = Division::all();
+        return view('agents.create', compact('bureaux', 'divisions'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            // Identité de base
-            'matricule'      => 'required|unique:agents,matricule',
-            'nom'            => 'required|string|max:255',
-            'postnom'        => 'required|string|max:255',
-            'prenom'         => 'required|string|max:255',
-            'bureau_id'      => 'required|exists:bureaus,id',
-            
-            // Nouveaux champs d'Identité & État Civil
-            'categorie_grade' => 'nullable|string|max:255',
-            'date_naissance'  => 'nullable|date',
-            'lieu_naissance'  => 'nullable|string|max:255',
-            'etat_civil'      => 'nullable|string|max:255',
-            'genre'           => 'nullable|in:M,F',
-            'telephone'       => 'nullable|string|max:20',
-            'email'           => 'nullable|email|max:255',
-            'adresse'         => 'nullable|string',
-            'nbre_enfant'     => 'nullable|integer|min:0',
-
-            // Études
-            'niveau_etude'    => 'nullable|string|max:255',
-            'domaine_etude'   => 'nullable|string|max:255',
-            'annee_obtention' => 'nullable|string|max:4',
-            'nom_institution' => 'nullable|string|max:255',
-            'pays_etude'      => 'nullable|string|max:255',
-
-            // Localisation
-            'province'        => 'nullable|string|max:255',
-            'ville'           => 'nullable|string|max:255',
-            'coordination'    => 'nullable|string|max:255',
-            'unite'           => 'nullable|string|max:255',
-            'departement'     => 'nullable|string|max:255',
-
-            // Professionnel
-            'position'        => 'nullable|string|max:255',
-            'date_embauche'   => 'nullable|date',
-            'remuneration'    => 'nullable|numeric|min:0',
-            'nature_acte'     => 'nullable|string|max:255',
-
-            // Documents
-            'doc_diplome'     => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-            'doc_biometrie'   => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-            'doc_affectation' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'matricule' => 'required|string|unique:agents,matricule',
+            'categorie_grade' => 'required|string',
+            'nom' => 'required|string',
+            'prenom' => 'required|string',
+            'postnom' => 'nullable|string',
+            'genre' => 'required|in:M,F',
+            'etat_civil' => 'required|string',
+            'date_naissance' => 'required|date',
+            'lieu_naissance' => 'required|string',
+            'nbre_enfant' => 'nullable|integer',
+            'telephone' => 'required|string',
+            'email' => 'required|email|unique:agents,email',
+            'pays' => 'nullable|string',
+            'province' => 'required|string',
+            'ville' => 'required|string',
+            'adresse' => 'nullable|string',
+            'niveau_etude' => 'required|string',
+            'domaine_etude' => 'required|string',
+            'nom_institution' => 'nullable|string',
+            'annee_obtention' => 'nullable|string',
+            'ref_document' => 'nullable|string',
+            'date_obtention' => 'nullable|date',
+            'departement' => 'nullable|string',
+            'division_id' => 'required|exists:divisions,id',
+            'coordination' => 'nullable|string',
+            'bureau_id' => 'required|exists:bureaus,id',
+            'unite' => 'nullable|string',
+            'position' => 'nullable|string',
+            'commission' => 'nullable|string',
+            'date_embauche' => 'nullable|date',
+            'nature_acte' => 'nullable|string',
+            'arrete' => 'nullable|string',
+            'remuneration' => 'nullable|string',
+            'status' => 'nullable|in:actif,deserteur,decede,retraite',
+            'carte_biometrique' => 'required|file|mimes:pdf,jpg,png|max:2048',
+            'documents_etude' => 'required|file|mimes:pdf,jpg,png|max:4096'
         ]);
+        return DB::transaction(function () use ($request, $validatedData) {
 
-        return DB::transaction(function () use ($request) {
-            
-            // Extraction des données de l'agent (on exclut les fichiers et les champs techniques des docs)
-            $agentData = $request->except([
-                'doc_diplome', 'ref_diplome', 'date_diplome', 'type_diplome',
-                'doc_biometrie', 'ref_biometrie', 'date_biometrie', 'type_biometrie',
-                'doc_affectation', 'ref_affectation', 'date_affectation', 'type_affectation',
-                '_token'
+        $agent = Agent::create($validatedData);
+
+        if ($request->hasFile('documents_etude')) {
+            $pathEtude = $request->file('documents_etude')->store('agents/etudes', 'public');
+            Document::create([
+                'agent_id'       => $agent->id,
+                'type'           => 'Diplôme/Étude',
+                'file_path'      => $pathEtude,
+                'reference'      => $request->ref_document, 
+                'date_obtention' => $request->date_obtention, 
             ]);
-
-            $agent = Agent::create($agentData);
-
-            // Gestion des documents
-            $documentConfigs = [
-                'diplome'     => 'Diplôme',
-                'biometrie'   => 'Carte Biométrique',
-                'affectation' => "Acte d'affectation"
-            ];
-
-            foreach ($documentConfigs as $prefix => $typeLabel) {
-                $fileKey = "doc_" . $prefix;
-                
-                if ($request->hasFile($fileKey)) {
-                    $file = $request->file($fileKey);
-                    $fileName = $agent->matricule . '_' . $prefix . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('documents/agents', $fileName, 'public');
-
-                    $agent->documents()->create([
-                        'type'           => $request->input("type_" . $prefix) ?? $typeLabel,
-                        'reference'      => $request->input("ref_" . $prefix),
-                        'file_path'      => $path,
-                        'date_obtention' => $request->input("date_" . $prefix),
-                        'stagiaire_id'   => null,
-                    ]);
-                }
-            }
-
-            return redirect()->route('agents.index')->with('success', "L'agent {$agent->nom} a été enregistré avec succès.");
-        });
+        }
+        if ($request->hasFile('carte_biometrique')) {
+            $pathBio = $request->file('carte_biometrique')->store('agents/biometrie', 'public');
+            Document::create([
+                'agent_id'  => $agent->id,
+                'type'      => 'Carte Biométrique',
+                'file_path' => $pathBio,
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Agent et documents enregistrés avec succès'
+        ], 201);
+    });
     }
 
     /**
