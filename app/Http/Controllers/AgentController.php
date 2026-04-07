@@ -22,7 +22,7 @@ class AgentController extends Controller
         $agents = Agent::with(['bureau.division'])->latest()->paginate(10);
         $bureaux = Bureau::all();
         $divisions = Division::all();
-
+        $documents = Document::all();
 
         $stats = [
             'countActifs' => Agent::where('status', 'Actif')->count(),
@@ -30,7 +30,7 @@ class AgentController extends Controller
             'countRetraite' => Agent::where('date_naissance', '<=', now()->subYears(55))->count(),
             'countDecedes' => Agent::where('status', 'Décédé')->count(),
         ];
-        return view('agents.index', compact('agents', 'stats', 'bureaux', 'divisions'));
+        return view('agents.index', compact('agents', 'stats', 'bureaux', 'divisions', 'documents'));
     }
 
     /**
@@ -89,37 +89,47 @@ class AgentController extends Controller
             'documents_etude' => 'required|file|mimes:pdf,jpg,png|max:4096'
         ]);
         try {
-                return DB::transaction(function () use ($request, $validatedData) {
-                    $agent = Agent::create($validatedData);
+            return DB::transaction(function () use ($request, $validatedData) {
+            $agent = Agent::create($validatedData);
 
-                    if ($request->hasFile('documents_etude')) {
-                        $pathEtude = $request->file('documents_etude')->store('agents/etudes', 'public');
-                        Document::create([
-                            'agent_id'       => $agent->id,
-                            'type'           => 'Diplôme/Étude',
-                            'file_path'      => $pathEtude,
-                            'reference'      => $request->ref_document, 
-                            'date_obtention' => $request->date_obtention, 
-                        ]);
-                    }
+                        if ($request->hasFile('documents_etude')) {
+                            try {
+                                $pathEtude = $request->file('documents_etude')->store('agents/etudes', 'public');
+                                Document::create([
+                                    'agent_id'       => $agent->id,
+                                    'type'           => 'Diplôme/Étude',
+                                    'file_path'      => $pathEtude,
+                                    'reference'      => $request->ref_document,
+                                    'date_obtention' => $request->date_obtention,
+                                ]);
+                            } catch (\Exception $e) {
+                                throw new \Exception('Erreur lors de l\'enregistrement du document d\'étude : ' . $e->getMessage());
+                            }
+                        }
 
-                    if ($request->hasFile('carte_biometrique')) {
-                        $pathBio = $request->file('carte_biometrique')->store('agents/biometrie', 'public');
-                        Document::create([
-                            'agent_id'  => $agent->id,
-                            'type'      => 'Carte Biométrique',
-                            'file_path' => $pathBio,
-                        ]);
-                    }
+                        if ($request->hasFile('carte_biometrique')) {
+                            try {
+                                $pathBio = $request->file('carte_biometrique')->store('agents/biometrie', 'public');
+                                Document::create([
+                                    'agent_id'       => $agent->id,
+                                    'type'           => 'Carte Biométrique',
+                                    'file_path'      => $pathBio,
+                                    'reference'      => $request->ref_biometrique ?? 'BIO-' . $agent->id . '-' . now()->timestamp,
+                                    'date_obtention' => $request->date_bio ?? now(),
+                                ]);
+                            } catch (\Exception $e) {
+                                throw new \Exception('Erreur lors de l\'enregistrement de la carte biométrique : ' . $e->getMessage());
+                            }
+                        }
 
-                    return redirect()->route('agents.index')->with('success', 'Agent créé avec succès');
-                });
 
-            } catch (\Exception $e) {
-                return back()
-                    ->withInput()
-                    ->withErrors(['error' => "Une erreur est survenue lors de l'enregistrement : " . $e->getMessage()]);
-            }
+            return redirect()->route('agents.index')->with('success', 'Agent créé avec succès');
+            });
+        } catch (\Exception $e) {
+            return back()
+            ->withInput()
+            ->withErrors(['error' => "Une erreur est survenue lors de l'enregistrement : " . $e->getMessage()]);
+        }
     }
 
     /**

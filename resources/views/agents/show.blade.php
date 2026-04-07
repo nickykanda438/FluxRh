@@ -125,25 +125,42 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    @foreach (['doc_diplome' => 'Diplôme', 'doc_biometrie' => 'Carte Bio', 'doc_affectation' => 'Acte'] as $field => $label)
+                    @php
+                        // On définit la correspondance entre ton label et le 'type' stocké en base de données
+                        $typesRecherches = [
+                            'Diplôme' => 'Diplôme/Étude',
+                            'Carte Bio' => 'Carte Biométrique',
+                            'Acte' => 'Acte d\'affectation', // Ajuste selon tes types réels
+                        ];
+                    @endphp
+
+                    @foreach ($typesRecherches as $label => $dbType)
+                        @php
+                            // On cherche si un document de ce type existe pour cet agent
+                            $doc = $agent->documents->where('type', $dbType)->first();
+                        @endphp
+
                         <div
                             class="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex items-center justify-between group">
                             <div class="flex items-center gap-4">
                                 <div
                                     class="w-12 h-12 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center shadow-sm">
                                     <span
-                                        class="material-symbols-outlined text-primary italic text-xl">file_present</span>
+                                        class="material-symbols-outlined {{ $doc ? 'text-primary' : 'text-slate-300' }} italic text-xl">
+                                        {{ $doc ? 'file_present' : 'description' }}
+                                    </span>
                                 </div>
                                 <div>
                                     <p class="text-[10px] font-black uppercase text-slate-400 leading-none">
                                         {{ $label }}</p>
                                     <p class="text-[11px] font-black mt-1">
-                                        {{ $agent->$field ? 'Disponible' : 'Non fourni' }}
+                                        {{ $doc ? 'Disponible' : 'Non fourni' }}
                                     </p>
                                 </div>
                             </div>
-                            @if ($agent->$field)
-                                <a href="{{ asset('storage/' . $agent->$field) }}" target="_blank"
+
+                            @if ($doc)
+                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
                                     class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-primary hover:text-white transition-all">
                                     <span class="material-symbols-outlined text-lg">open_in_new</span>
                                 </a>
