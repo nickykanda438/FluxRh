@@ -2,7 +2,6 @@
     <div class="min-h-screen bg-slate-50 dark:bg-black font-sans text-slate-900 dark:text-slate-100 p-6 lg:p-10">
         <div class="max-w-7xl mx-auto">
 
-            {{-- 1. HEADER : TITRE ET ACTION PRINCIPALE --}}
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
                     <h2 class="text-3xl font-black tracking-tighter uppercase italic">
@@ -20,7 +19,6 @@
                 </a>
             </div>
 
-            {{-- 2. SECTION STATISTIQUES (CARDS) --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
                 @php
@@ -33,7 +31,6 @@
                     $percF = $total > 0 ? ($females / $total) * 100 : 0;
                 @endphp
 
-                {{-- Card Effectif Total --}}
                 <div
                     class="relative overflow-hidden bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
@@ -50,7 +47,6 @@
 
                     <div class="text-3xl font-black italic text-slate-800 dark:text-white">{{ $total }}</div>
 
-                    {{-- Barre de progression dynamique sans erreur de syntaxe --}}
                     <div class="mt-4 flex items-center gap-2">
                         <div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex"
                             style="--width-m: {{ $percM }}%; --width-f: {{ $percF }}%;">
@@ -64,7 +60,6 @@
                     </div>
                 </div>
 
-                {{-- Card Déserteurs --}}
                 <div
                     class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
@@ -81,7 +76,6 @@
                     <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">Déserteurs</div>
                 </div>
 
-                {{-- Card Retraités --}}
                 <div
                     class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
@@ -98,7 +92,6 @@
                     <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">Retraités</div>
                 </div>
 
-                {{-- Card Actifs --}}
                 <div
                     class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
@@ -115,7 +108,6 @@
                 </div>
             </div>
 
-            {{-- 3. BARRE DE RECHERCHE --}}
             <div class="mb-8 flex gap-4">
                 <form action="{{ route('agents.index') }}" method="GET" class="relative flex-1 group">
                     <span
@@ -157,7 +149,6 @@
                 </div>
             @endif
 
-            {{-- 4. TABLEAU DES AGENTS --}}
             <div
                 class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto">
@@ -224,14 +215,12 @@
                                                 class="p-2 text-slate-400 hover:text-amber-500 transition-colors">
                                                 <span class="material-symbols-outlined text-lg">edit_note</span>
                                             </a>
-                                            <form action="{{ route('agents.destroy', $agent->id) }}" method="POST"
-                                                class="inline"
-                                                onsubmit="return confirm('Confirmer la suppression ?')">
-                                                @csrf @method('DELETE')
-                                                <button type="submit"
-                                                    class="p-2 text-slate-400 hover:text-red-500 transition-colors">
-                                                    <span class="material-symbols-outlined text-lg">delete_sweep</span>
-                                                </button>
+                                            <a data-modal-target="popup-modal" data-modal-toggle="popup-modal"
+                                                onclick="supprimer(event)"
+                                                data-url="{{ route('agents.destroy', $agent->id) }}"
+                                                class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                                                <span class="material-symbols-outlined text-lg">delete_sweep</span>
+                                            </a>
                                             </form>
                                         </div>
                                     </td>
@@ -252,8 +241,9 @@
                         </tbody>
                     </table>
                 </div>
-            </div> {{-- FIN TABLEAU --}}
+            </div>
 
-        </div> {{-- FIN MAX-W-7XL --}}
-    </div> {{-- FIN MIN-H-SCREEN --}}
+        </div>
+    </div>
+    <x-confirm message="Voulez-vous supprimer cet agent ?" />
 </x-app-layout>

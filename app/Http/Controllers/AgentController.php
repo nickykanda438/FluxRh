@@ -88,33 +88,38 @@ class AgentController extends Controller
             'carte_biometrique' => 'required|file|mimes:pdf,jpg,png|max:2048',
             'documents_etude' => 'required|file|mimes:pdf,jpg,png|max:4096'
         ]);
-        return DB::transaction(function () use ($request, $validatedData) {
+        try {
+                return DB::transaction(function () use ($request, $validatedData) {
+                    $agent = Agent::create($validatedData);
 
-        $agent = Agent::create($validatedData);
+                    if ($request->hasFile('documents_etude')) {
+                        $pathEtude = $request->file('documents_etude')->store('agents/etudes', 'public');
+                        Document::create([
+                            'agent_id'       => $agent->id,
+                            'type'           => 'Diplôme/Étude',
+                            'file_path'      => $pathEtude,
+                            'reference'      => $request->ref_document, 
+                            'date_obtention' => $request->date_obtention, 
+                        ]);
+                    }
 
-        if ($request->hasFile('documents_etude')) {
-            $pathEtude = $request->file('documents_etude')->store('agents/etudes', 'public');
-            Document::create([
-                'agent_id'       => $agent->id,
-                'type'           => 'Diplôme/Étude',
-                'file_path'      => $pathEtude,
-                'reference'      => $request->ref_document, 
-                'date_obtention' => $request->date_obtention, 
-            ]);
-        }
-        if ($request->hasFile('carte_biometrique')) {
-            $pathBio = $request->file('carte_biometrique')->store('agents/biometrie', 'public');
-            Document::create([
-                'agent_id'  => $agent->id,
-                'type'      => 'Carte Biométrique',
-                'file_path' => $pathBio,
-            ]);
-        }
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Agent et documents enregistrés avec succès'
-        ], 201);
-    });
+                    if ($request->hasFile('carte_biometrique')) {
+                        $pathBio = $request->file('carte_biometrique')->store('agents/biometrie', 'public');
+                        Document::create([
+                            'agent_id'  => $agent->id,
+                            'type'      => 'Carte Biométrique',
+                            'file_path' => $pathBio,
+                        ]);
+                    }
+
+                    return redirect()->route('agents.index')->with('success', 'Agent créé avec succès');
+                });
+
+            } catch (\Exception $e) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['error' => "Une erreur est survenue lors de l'enregistrement : " . $e->getMessage()]);
+            }
     }
 
     /**

@@ -35,6 +35,8 @@ return new class extends Migration
             $table->string('coordination')->nullable();
             $table->string('unite')->nullable();
             $table->string('departement')->nullable();
+            $table->integer('renumeration')->nullable();
+            $table->string('adresse')->nullable();
             $table->foreignId('division_id')->constrained('divisions')->onDelete('cascade');
             $table->foreignId('bureau_id')->constrained('bureaus')->onDelete('cascade');
             $table->enum('status', ['actif', 'deserteur', 'decede', 'retraite'])->default('actif');
