@@ -1,5 +1,7 @@
-<div @click="sidebarOpen = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden"
-    x-show="sidebarOpen" x-transition.opacity>
+<div @click="sidebarOpen = false" 
+     class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden"
+     x-show="sidebarOpen" 
+     x-transition.opacity>
 </div>
 
 <aside x-data="{ isCollapsed: false }"
@@ -7,17 +9,13 @@
         sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         isCollapsed ? 'lg:w-20' : 'lg:w-72'
     ]"
-    class="w-72 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full z-50 transition-all duration-300 transform lg:translate-x-0">
+    class="w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full z-50 transition-all duration-300 transform lg:translate-x-0">
 
     <div class="p-4 mb-2 flex items-center justify-between overflow-hidden">
         <div class="flex items-center gap-3 shrink-0">
             <button @click="isCollapsed = !isCollapsed"
-                class="hidden lg:flex p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors">
-                <div
-                    class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary/30 shrink-0">
-                    <span class="material-symbols-outlined"
-                        :class="isCollapsed ? 'rotate-180' : ''">corporate_fare</span>
-                </div>
+                class="hidden lg:flex p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400">
+                <img src="{{ asset('back_auth/assets/img/logo.png') }}" alt="Logo" class="w-6 h-6">
             </button>
 
             <h1 x-show="!isCollapsed" x-transition.opacity
@@ -52,10 +50,10 @@
         @endforeach
     </nav>
 
-    <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
         <div class="flex items-center gap-3 p-1" :class="isCollapsed ? 'justify-center' : 'justify-between'">
             <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-9 h-9 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-primary border border-primary/20 shrink-0"
+                <div class="w-9 h-9 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary border border-primary/20 shrink-0"
                     title="{{ Auth::user()->name }}">
                     <span class="material-symbols-outlined text-xl">account_circle</span>
                 </div>
@@ -63,15 +61,9 @@
                     <p class="text-sm font-bold truncate text-slate-900 dark:text-white">
                         {{ Auth::user()->name }}
                     </p>
-                    @if (Auth::user()->is_admin == 1)
-                        <p class="text-[10px] text-slate-500 dark:text-slate-500 truncate uppercase tracking-tighter">
-                            Administrateur
-                        </p>
-                    @else
-                        <p class="text-[10px] text-slate-500 dark:text-slate-500 truncate uppercase tracking-tighter">
-                            Utilisateur
-                        </p>
-                    @endif
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate uppercase tracking-tighter">
+                        {{ Auth::user()->is_admin == 1 ? 'Administrateur' : 'Utilisateur' }}
+                    </p>
                 </div>
             </div>
 
@@ -86,18 +78,18 @@
         </div>
     </div>
 </aside>
+
 <section>
-    <nav
-        class="lg:hidden sticky bottom-0 bg-white/80 backdrop-blur-md dark:bg-slate-900/80 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around py-3">
-        <a class="flex flex-col items-center gap-1 text-blue-600" href="#">
+    <nav class="lg:hidden sticky bottom-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-around py-3">
+        <a class="flex flex-col items-center gap-1 text-primary dark:text-blue-400" href="#">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="text-[10px] font-bold uppercase">Dashboard</span>
         </a>
-        <a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+        <a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
             <span class="material-symbols-outlined">groups</span>
             <span class="text-[10px] font-bold uppercase">Agents</span>
         </a>
-        <a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+        <a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
             <span class="material-symbols-outlined">analytics</span>
             <span class="text-[10px] font-bold uppercase">Rapports</span>
         </a>
