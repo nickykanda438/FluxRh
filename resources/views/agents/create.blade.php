@@ -22,23 +22,7 @@
                     <span class="material-symbols-outlined text-sm">arrow_back</span> Retour
                 </a>
             </div>
-            @if (session('success'))
-                <div id="alert-success"
-                    class="flex items-center p-4 mb-4 text-green-800 border border-green-300 rounded-2xl bg-green-50 dark:bg-slate-900 dark:text-green-400 dark:border-green-800 transition-all duration-300"
-                    role="alert">
-                    <span class="material-symbols-outlined mr-2">check_circle</span>
-                    <div class="text-sm font-medium flex-1">
-                        <span class="font-bold">Succès !</span> {{ session('success') }}
-                    </div>
-                    <button type="button"
-                        class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 dark:hover:bg-slate-800 inline-flex items-center justify-center h-8 w-8 transition-colors"
-                        onclick="this.parentElement.remove()" aria-label="Close">
-                        <span class="material-symbols-outlined text-sm">close</span>
-                    </button>
-                </div>
-            @endif
-
-            @if (session('error'))
+            @if ($errors->any())
                 <div id="alert-error"
                     class="flex items-center p-4 mb-4 text-red-800 border border-red-300 rounded-2xl bg-red-50 dark:bg-slate-900 dark:text-red-400 dark:border-red-800 transition-all duration-300"
                     role="alert">
