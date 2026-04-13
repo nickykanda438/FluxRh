@@ -133,6 +133,22 @@ class AgentController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        // 1. Récupérer l'agent ou renvoyer une erreur 404
+        $agent = Agent::findOrFail($id);
+        
+        // 2. Récupérer les données nécessaires pour les menus déroulants du formulaire
+        $bureaux = Bureau::all();
+        $divisions = Division::all();
+        
+        // 3. Retourner la vue d'édition avec les données
+        return view('agents.edit', compact('agent', 'bureaux', 'divisions'));
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(string $id)
