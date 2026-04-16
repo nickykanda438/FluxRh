@@ -23,52 +23,20 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
-
-
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
 </head>
+<body x-data="{ sidebarOpen: false, isCollapsed: false }" class="font-sans antialiased">
+    
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex relative">
+        
+        @include('layouts.navigation')
 
-<body class="bg-gray-50 dark:bg-gray-900 font-sans text-slate-900 dark:text-slate-100" x-data="{ sidebarOpen: false }">
+        <div class="flex-1 transition-all duration-300 ease-in-out"
+             :class="isCollapsed ? 'lg:pl-20' : 'lg:pl-72'">
 
-    <div class="flex min-h-screen relative">
-
-        <div x-show="sidebarOpen" x-transition:enter="transition opacity-ease-out duration-300"
-            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-            x-transition:leave="transition opacity-ease-in duration-300" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0" @click="sidebarOpen = false"
-            class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden">
-        </div>
-
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out lg:translate-x-0">
-
-            @include('layouts.navigation')
-
-        </aside>
-
-        <div class="flex flex-col flex-1 min-w-0 lg:pl-72">
-
-            <header
-                class="sticky top-0 z-30 flex items-center justify-between h-16 px-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur border-b border-gray-200 dark:border-gray-700 lg:hidden">
-                <button @click="sidebarOpen = true" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <span class="material-symbols-outlined">menu</span>
-                </button>
-                <span class="font-bold">{{ config('app.name') }}</span>
-                <div class="w-10"></div>
-            </header>
-
-            <main class="flex-1">
-                <div class="py-6 px-4 sm:px-6 lg:px-8">
-                    <div class="max-w-7xl mx-auto">
-                        {{ $slot }}
-                    </div>
-                </div>
+            <main>
+                {{ $slot }}
             </main>
         </div>
-
     </div>
 </body>
-
-</html>
