@@ -4,7 +4,7 @@
      x-transition.opacity>
 </div>
 
-<aside x-data="{ isCollapsed: false }"
+<aside 
     :class="[
         sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         isCollapsed ? 'lg:w-20' : 'lg:w-72'
@@ -24,6 +24,7 @@
             </h1>
         </div>
     </div>
+
 
     <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto overflow-x-hidden">
         @php
