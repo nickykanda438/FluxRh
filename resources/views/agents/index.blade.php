@@ -1,243 +1,149 @@
 <x-app-layout>
-    <div class="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 p-6 lg:p-10">
+    <div class="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 p-4 sm:p-6 lg:p-8 pb-20">
         <div class="max-w-7xl mx-auto">
 
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h2 class="text-3xl font-black tracking-tighter uppercase italic">
-                        FluxRh <span class="text-blue-600">/</span> Annuaire
+                    <h2 class="text-xl sm:text-2xl font-bold tracking-tight uppercase italic">
+                        FluxRh <span class="text-blue-600">/</span> <span class="text-slate-500">Annuaire</span>
                     </h2>
-                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">
-                        Tableau de bord de gestion du personnel
+                    <p class="text-slate-400 text-[9px] font-bold uppercase tracking-widest mt-1">
+                        Gestion du personnel
                     </p>
                 </div>
 
                 <a href="{{ route('agents.create') }}"
-                    class="group px-8 py-4 bg-blue-600 text-white rounded-2xl shadow-xl shadow-blue-600/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
-                    <span class="material-symbols-outlined text-xl">person_add</span>
-                    <span class="text-[10px] font-black uppercase tracking-widest">Nouvel Agent</span>
+                    class="group inline-flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-700 active:scale-95">
+                    <span class="material-symbols-outlined text-lg">person_add</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider">Nouveau</span>
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 @php
                     $total = $agents->count();
                     $males = $agents->where('genre', 'M')->count();
                     $females = $agents->where('genre', 'F')->count();
-
-                    // Calcul des pourcentages pour la barre de progression
                     $percM = $total > 0 ? ($males / $total) * 100 : 0;
                     $percF = $total > 0 ? ($females / $total) * 100 : 0;
                 @endphp
 
-                <div
-                    class="relative overflow-hidden bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined text-blue-600">groups</span>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <div class="text-[10px] font-black uppercase tracking-widest text-slate-400">Effectif</div>
-                            <div class="text-[9px] font-bold text-blue-500 uppercase">{{ $males }}H /
-                                {{ $females }}F</div>
+                <div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="material-symbols-outlined text-blue-600 bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg text-xl">groups</span>
+                        <div class="text-right">
+                            <div class="text-2xl font-black italic">{{ $total }}</div>
+                            <div class="text-[9px] font-bold uppercase text-slate-400">Total Agents</div>
                         </div>
                     </div>
-
-                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">{{ $total }}</div>
-
-                    <div class="mt-4 flex items-center gap-2">
-                        <div class="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex"
-                            style="--width-m: {{ $percM }}%; --width-f: {{ $percF }}%;">
-                            <div class="h-full bg-blue-500 transition-all duration-500" style="width: var(--width-m)">
-                            </div>
-                            <div class="h-full bg-pink-500 transition-all duration-500" style="width: var(--width-f)">
-                            </div>
-                        </div>
-                        <span class="text-[9px] font-bold text-slate-400">{{ round($percM) }}% /
-                            {{ round($percF) }}%</span>
+                    <div class="mt-3 h-1 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden flex">
+                        <div class="bg-blue-500" style="width: {{ $percM }}%"></div>
+                        <div class="bg-pink-500" style="width: {{ $percF }}%"></div>
                     </div>
                 </div>
 
-                <div
-                    class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined text-red-600">person_off</span>
-                        </div>
-                        <span
-                            class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 text-[9px] font-black rounded-lg uppercase">Alerte</span>
+                <div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                    <span class="material-symbols-outlined text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 p-2 rounded-lg text-xl">verified_user</span>
+                    <div>
+                        <div class="text-xl font-black italic">{{ $agents->where('statut', 'Actif')->count() }}</div>
+                        <div class="text-[9px] font-bold uppercase text-slate-400">En service</div>
                     </div>
-                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">
-                        {{ $agents->where('statut', 'Déserteur')->count() }}
-                    </div>
-                    <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">Déserteurs</div>
                 </div>
 
-                <div
-                    class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined text-emerald-600">elderly</span>
-                        </div>
-                        <span
-                            class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 text-[9px] font-black rounded-lg uppercase">Archive</span>
+                <div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                    <span class="material-symbols-outlined text-red-500 bg-red-50 dark:bg-red-900/20 p-2 rounded-lg text-xl">person_off</span>
+                    <div>
+                        <div class="text-xl font-black italic">{{ $agents->where('statut', 'Déserteur')->count() }}</div>
+                        <div class="text-[9px] font-bold uppercase text-slate-400">Déserteurs</div>
                     </div>
-                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">
-                        {{ $agents->where('statut', 'Retraité')->count() }}
-                    </div>
-                    <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">Retraités</div>
                 </div>
 
-                <div
-                    class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <div
-                            class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-2xl flex items-center justify-center">
-                            <span class="material-symbols-outlined text-amber-600">verified_user</span>
-                        </div>
-                        <div class="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
+                <div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                    <span class="material-symbols-outlined text-amber-500 bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg text-xl">elderly</span>
+                    <div>
+                        <div class="text-xl font-black italic">{{ $agents->where('statut', 'Retraité')->count() }}</div>
+                        <div class="text-[9px] font-bold uppercase text-slate-400">Retraités</div>
                     </div>
-                    <div class="text-3xl font-black italic text-slate-800 dark:text-white">
-                        {{ $agents->where('statut', 'Actif')->count() }}
-                    </div>
-                    <div class="text-[10px] font-bold uppercase text-slate-400 tracking-widest mt-1">En service</div>
                 </div>
             </div>
 
-            <div class="mb-8 flex gap-4">
-                <form action="{{ route('agents.index') }}" method="GET" class="relative flex-1 group">
-                    <span
-                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">search</span>
+            <div class="mb-6">
+                <form action="{{ route('agents.index') }}" method="GET" class="relative group">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
                     <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Rechercher par nom ou matricule..."
-                        class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-4 pl-12 text-xs font-medium focus:ring-2 focus:ring-blue-500 shadow-sm outline-none">
+                        placeholder="Rechercher..."
+                        class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-11 text-xs focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                 </form>
             </div>
-            @if (session('success'))
-                <div id="alert-success"
-                    class="flex items-center p-4 mb-4 text-green-800 border border-green-300 rounded-2xl bg-green-50 dark:bg-slate-900 dark:text-green-400 dark:border-green-800 transition-all duration-300"
-                    role="alert">
-                    <span class="material-symbols-outlined mr-2">check_circle</span>
-                    <div class="text-sm font-medium flex-1">
-                        <span class="font-bold">Succès !</span> {{ session('success') }}
-                    </div>
-                    <button type="button"
-                        class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 dark:hover:bg-slate-800 inline-flex items-center justify-center h-8 w-8 transition-colors"
-                        onclick="this.parentElement.remove()" aria-label="Close">
-                        <span class="material-symbols-outlined text-sm">close</span>
-                    </button>
-                </div>
-            @endif
 
-            @if (session('error'))
-                <div id="alert-error"
-                    class="flex items-center p-4 mb-4 text-red-800 border border-red-300 rounded-2xl bg-red-50 dark:bg-slate-900 dark:text-red-400 dark:border-red-800 transition-all duration-300"
-                    role="alert">
-                    <span class="material-symbols-outlined mr-2">info</span>
-                    <div class="text-sm font-medium flex-1">
-                        <span class="font-bold">Attention :</span> {{ session('error') }}
-                    </div>
-                    <button type="button"
-                        class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 dark:hover:bg-slate-800 inline-flex items-center justify-center h-8 w-8 transition-colors"
-                        onclick="this.parentElement.remove()" aria-label="Close">
-                        <span class="material-symbols-outlined text-sm">close</span>
-                    </button>
-                </div>
-            @endif
-
-            <div
-                class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr
-                                class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Agent
-                                </th>
-                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    Matricule</th>
-                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    Département & Fonction</th>
-                                <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    Localisation</th>
-                                <th
-                                    class="p-6 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    Actions</th>
+                        <thead class="hidden md:table-header-group">
+                            <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                                <th class="p-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Agent</th>
+                                <th class="p-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Matricule</th>
+                                <th class="p-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Poste</th>
+                                <th class="p-4 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800 flex flex-col md:table-row-group">
                             @forelse($agents as $agent)
-                                <tr class="group hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
-                                    <td class="p-6">
-                                        <div class="flex items-center gap-4">
-                                            <div
-                                                class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-blue-600 font-black text-xs uppercase shadow-sm">
+                                <tr class="flex flex-col md:table-row group hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors p-4 md:p-0">
+                                    
+                                    <td class="md:p-4 mb-2 md:mb-0">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 shrink-0 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 font-bold text-[10px]">
                                                 {{ strtoupper(substr($agent->nom, 0, 1) . substr($agent->prenom, 0, 1)) }}
                                             </div>
-                                            <div>
-                                                <div
-                                                    class="text-sm font-black text-slate-800 dark:text-slate-100 uppercase italic">
-                                                    {{ $agent->nom }} {{ $agent->prenom }}</div>
-                                                <div
-                                                    class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">
-                                                    {{ $agent->email }}</div>
+                                            <div class="overflow-hidden">
+                                                <div class="text-xs font-black text-slate-800 dark:text-slate-100 uppercase truncate italic">
+                                                    {{ $agent->nom }} {{ $agent->prenom }}
+                                                </div>
+                                                <div class="text-[9px] text-slate-400 font-bold uppercase md:hidden">
+                                                    Matricule: #{{ $agent->matricule }}
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="p-6">
-                                        <span
-                                            class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-[10px] font-black text-blue-600 uppercase tracking-widest italic border border-blue-100 dark:border-blue-800">
+
+                                    <td class="hidden md:table-cell md:p-4">
+                                        <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[9px] font-bold text-slate-500 uppercase">
                                             #{{ $agent->matricule }}
                                         </span>
                                     </td>
-                                    <td class="p-6">
-                                        <div class="text-xs font-bold text-slate-600 dark:text-slate-300">
-                                            {{ $agent->fonction }}</div>
-                                        <div class="text-[10px] text-slate-400 font-black uppercase tracking-tighter">
-                                            {{ $agent->departement }}</div>
+
+                                    <td class="md:p-4 mb-3 md:mb-0">
+                                        <div class="flex flex-col">
+                                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300 leading-tight">
+                                                {{ $agent->fonction }}
+                                            </span>
+                                            <span class="text-[9px] text-slate-400 font-black uppercase tracking-tighter">
+                                                {{ $agent->departement }}
+                                            </span>
+                                        </div>
                                     </td>
-                                    <td class="p-6">
-                                        <div class="text-xs font-bold">{{ $agent->ville }}</div>
-                                        <div class="text-[10px] text-slate-400 font-bold uppercase">
-                                            {{ $agent->province }}</div>
-                                    </td>
-                                    <td class="p-6 text-right">
-                                        <div class="flex items-center justify-end gap-2">
-                                            <a href="{{ route('agents.show', $agent->id) }}"
-                                                class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
+
+                                    <td class="md:p-4 md:text-right border-t border-slate-50 dark:border-slate-800 pt-3 md:pt-4 md:border-none mt-auto">
+                                        <div class="flex items-center md:justify-end gap-3">
+                                            <a href="{{ route('agents.show', $agent->id) }}" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-blue-500 uppercase transition-colors">
                                                 <span class="material-symbols-outlined text-lg">visibility</span>
+                                                <span class="md:hidden">Voir</span>
                                             </a>
-                                            <a href="{{ route('agents.edit', $agent->id) }}"
-                                                class="p-2 text-slate-400 hover:text-amber-500 transition-colors">
+                                            <a href="{{ route('agents.edit', $agent->id) }}" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-amber-500 uppercase transition-colors">
                                                 <span class="material-symbols-outlined text-lg">edit_note</span>
+                                                <span class="md:hidden">Éditer</span>
                                             </a>
-                                            <a data-modal-target="popup-modal" data-modal-toggle="popup-modal"
-                                                onclick="supprimer(event)"
-                                                data-url="{{ route('agents.destroy', $agent->id) }}"
-                                                class="p-2 text-slate-400 hover:text-red-500 transition-colors">
-                                                <span class="material-symbols-outlined text-lg">delete_sweep</span>
-                                            </a>
-                                            </form>
+                                            <button onclick="supprimer(event)" data-url="{{ route('agents.destroy', $agent->id) }}" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-red-500 uppercase transition-colors ml-auto md:ml-0">
+                                                <span class="material-symbols-outlined text-lg text-red-400">delete_sweep</span>
+                                                <span class="md:hidden">Supprimer</span>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5" class="p-24 text-center">
-                                        <div class="flex flex-col items-center opacity-30">
-                                            <span class="material-symbols-outlined text-7xl">person_search</span>
-                                            <p
-                                                class="font-black uppercase text-[10px] tracking-[0.2em] mt-4 italic text-slate-500">
-                                                La base de données est actuellement vide
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
+                                @endforelse
                         </tbody>
                     </table>
                 </div>
